@@ -57,7 +57,7 @@
   <div class="card" id="product-card">
     <img id="product-img" src="https://i.imgur.com/U9JyPiL.jpg" alt="Orange Durban">
     <div class="name" id="product-name">Orange Durban (Q)</div>
-    <div class="price" id="product-price">$130</div>
+    <div class="price" id="product-price">¥130</div>
 
     <select class="selector" id="spec-selector">
       <option value='{"规格":"Q","价格":130,"图片":"https://i.imgur.com/U9JyPiL.jpg"}'>Q – ¥130</option>
@@ -81,7 +81,7 @@
       const item = JSON.parse(e.target.value);
       imgEl.src   = item.图片;
       nameEl.textContent  = `Orange Durban (${item.规格})`;
-      priceEl.textContent = `${item.价格}`;
+      priceEl.textContent = `¥${item.价格}`;
     });
 
     // 加入购物车示例
@@ -89,7 +89,7 @@
     btnEl.addEventListener('click', () => {
       const selected = JSON.parse(selectEl.value);
       cart.push(selected);
-      alert(`已加入购物车：Orange Durban (${selected.规格}) – ${selected.价格}`);
+      alert(`已加入购物车：Orange Durban (${selected.规格}) – ¥${selected.价格}`);
       console.log('当前购物车：', cart);
     });
   </script>
