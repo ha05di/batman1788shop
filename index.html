@@ -2,97 +2,106 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>规格选择示例</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu WebApp</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body { font-family: sans-serif; background: #f7f7f7; padding: 20px; }
-    .card {
-      width: 300px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 16px;
-      margin: auto;
-    }
-    .card img {
-      width: 100%;
-      border-radius: 6px;
-      object-fit: cover;
-      margin-bottom: 12px;
-    }
-    .name {
-      font-size: 1.2em;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-    .price {
-      font-size: 1.1em;
-      color: #2cab37;
-      margin-bottom: 12px;
-    }
-    .selector {
-      width: 100%;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      margin-bottom: 16px;
-      font-size: 1em;
-    }
-    .button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background: #2cab37;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 1em;
-      cursor: pointer;
-    }
+    body { font-family: sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
+    .container { padding: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 12px; display: flex; flex-direction: column; }
+    .card img { width: 100%; border-radius: 8px; object-fit: cover; margin-bottom: 8px; }
+    .name { font-weight: bold; font-size: 1.1em; margin-bottom: 4px; }
+    .price { margin: 4px 0; font-size: 1em; }
+    .desc { font-size: 0.9em; color: gray; margin-bottom: 8px; }
+    .selector { margin-bottom: 8px; }
+    .button { background: #2cab37; color: white; padding: 8px; border-radius: 8px; border: none; cursor: pointer; }
     .button:active { background: #22962f; }
   </style>
 </head>
 <body>
-
-  <div class="card" id="product-card">
-    <img id="product-img" src="https://i.imgur.com/U9JyPiL.jpg" alt="Orange Durban">
-    <div class="name" id="product-name">Orange Durban (Q)</div>
-    <div class="price" id="product-price">¥130</div>
-
-    <select class="selector" id="spec-selector">
-      <option value='{"规格":"Q","价格":130,"图片":"https://i.imgur.com/U9JyPiL.jpg"}'>Q – ¥130</option>
-      <option value='{"规格":"H","价格":240,"图片":"https://i.imgur.com/U9JyPiL.jpg"}'>H – ¥240</option>
-      <option value='{"规格":"OZ","价格":380,"图片":"https://i.imgur.com/U9JyPiL.jpg"}'>OZ – ¥380</option>
-    </select>
-
-    <button class="button" id="add-to-cart">Add to Cart</button>
-  </div>
-
+  <div class="container" id="menu"></div>
   <script>
-    // 拿到 DOM 元素
-    const imgEl    = document.getElementById('product-img');
-    const nameEl   = document.getElementById('product-name');
-    const priceEl  = document.getElementById('product-price');
-    const selectEl = document.getElementById('spec-selector');
-    const btnEl    = document.getElementById('add-to-cart');
-
-    // 当用户切换规格时，更新图片/名称/价格
-    selectEl.addEventListener('change', e => {
-      const item = JSON.parse(e.target.value);
-      imgEl.src   = item.图片;
-      nameEl.textContent  = `Orange Durban (${item.规格})`;
-      priceEl.textContent = `¥${item.价格}`;
-    });
-
-    // 加入购物车示例
+    const tg = window.Telegram.WebApp;
+    const sheetID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";  // 你的 Google Sheet ID
+    const sheetURL = `https://opensheet.elk.sh/${sheetID}/menu`;
     let cart = [];
-    btnEl.addEventListener('click', () => {
-      const selected = JSON.parse(selectEl.value);
-      cart.push(selected);
-      alert(`已加入购物车：Orange Durban (${selected.规格}) – ¥${selected.价格}`);
-      console.log('当前购物车：', cart);
-    });
-  </script>
 
+    async function loadMenu() {
+      const res = await fetch(sheetURL);
+      const items = await res.json();
+      // 分组：按商品名聚合规格
+      const groups = {};
+      items.filter(i => i["是否上架"] === "TRUE").forEach(item => {
+        const name = item["商品名"];
+        if (!groups[name]) groups[name] = [];
+        groups[name].push(item);
+      });
+
+      const container = document.getElementById("menu");
+      Object.values(groups).forEach(specs => {
+        // 默认选中第一个规格
+        let selected = specs[0];
+        const card = document.createElement("div");
+        card.className = "card";
+
+        // 创建元素
+        const img = document.createElement("img");
+        img.src = selected["图片链接"];
+        img.alt = selected["商品名"];
+
+        const nameEl = document.createElement("div");
+        nameEl.className = "name";
+        nameEl.textContent = `${selected["商品名"]} (${selected["规格"]})`;
+
+        const priceEl = document.createElement("div");
+        priceEl.className = "price";
+        priceEl.textContent = `¥${selected["价格"]}`;
+
+        const descEl = document.createElement("div");
+        descEl.className = "desc";
+        descEl.textContent = selected["描述（可选）"] || '';
+
+        // 下拉选择规格
+        const selector = document.createElement("select");
+        selector.className = "selector";
+        specs.forEach(item => {
+          const opt = document.createElement("option");
+          opt.value = JSON.stringify(item);
+          opt.textContent = `${item["规格"]} — ¥${item["价格"]}`;
+          selector.appendChild(opt);
+        });
+        selector.addEventListener("change", e => {
+          selected = JSON.parse(e.target.value);
+          // 更新展示
+          img.src = selected["图片链接"];
+          nameEl.textContent = `${selected["商品名"]} (${selected["规格"]})`;
+          priceEl.textContent = `¥${selected["价格"]}`;
+          descEl.textContent = selected["描述（可选）"] || '';
+        });
+
+        const btn = document.createElement("button");
+        btn.className = "button";
+        btn.textContent = "Add to Cart";
+        btn.addEventListener("click", () => {
+          cart.push(selected);
+          tg.HapticFeedback.notificationOccurred("success");
+          tg.MainButton.setText(`🛒 Checkout (${cart.length})`);
+          tg.MainButton.show();
+        });
+
+        // 拼装卡片
+        card.append(img, nameEl, priceEl, descEl, selector, btn);
+        container.appendChild(card);
+      });
+    }
+
+    tg.MainButton.onClick(() => {
+      tg.sendData(JSON.stringify(cart));
+      tg.close();
+    });
+
+    tg.ready();
+    loadMenu();
+  </script>
 </body>
 </html>
