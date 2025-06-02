@@ -186,7 +186,7 @@
 
     /*** 3. 拉取商品列表 ***/
     // 请把下面链接替换为你自己部署的 Apps Script “exec” 链接（完整版）
-    const SHEET_API_URL = "https://script.google.com/macros/s/你的ExecID/exec";
+    const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyHi8NIV9in1xqC_sl4Cdwhrtnp1ywaAMQE5Zzb2e-EUiiGA8zQa-bgT7LLeF9ea5Cg/exec";
 
     fetch(SHEET_API_URL)
       .then(resp => {
@@ -219,9 +219,9 @@
         const imgUrl = rawImg1 || rawImg2 || placeholderImg;
 
         // 价格字段：必须与后台 JSON 一一对应。如果你的 Sheet 表头是 “小杯价格”、“中杯价格”、“大杯价格”，如下写法就对
-        const priceSmall  = parseInt(item["小杯价格"], 10)  || 0;
-        const priceMedium = parseInt(item["中杯价格"], 10)  || 0;
-        const priceLarge  = parseInt(item["大杯价格"], 10)  || 0;
+        const priceSmall  = parseInt(item["Q"], 10)  || 0;
+        const priceMedium = parseInt(item["H"], 10)  || 0;
+        const priceLarge  = parseInt(item["OZ"], 10)  || 0;
 
         // 标签字段：如果 Sheet 表头是 “标签(tag)” 或 “标签”，对应取值
         const tag = item["标签(tag)"] || item["标签"] || "";
