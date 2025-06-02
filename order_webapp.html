@@ -20,6 +20,7 @@
       font-size: 1.4rem;
       color: #333;
     }
+
     /* ---------- “WebApp 检测” 提示栏 ---------- */
     #debugStatus {
       padding: 8px;
@@ -27,7 +28,9 @@
       color: #000;
       font-size: 0.9rem;
       text-align: center;
+      transition: background-color 0.3s;
     }
+
     /* ---------- 商品卡片样式 ---------- */
     .product {
       background-color: #fff;
@@ -76,6 +79,7 @@
     .btn-cart:hover {
       background-color: #1565c0;
     }
+
     /* ---------- 购物车样式 ---------- */
     .cart {
       background-color: #fff;
@@ -120,6 +124,13 @@
     .btn-order:hover {
       background-color: #2e7d32;
     }
+    /* “加载失败” 文本 */
+    .error-text {
+      color: #e53935;
+      font-size: 1rem;
+      text-align: center;
+      margin-top: 16px;
+    }
   </style>
 </head>
 <body>
@@ -132,9 +143,13 @@
     <h2>点餐中心</h2>
     <!-- 商品列表 容器 -->
     <div id="productList"></div>
+    <!-- 若加载失败，就在这里显示错误 -->
+    <div id="productError" class="error-text" style="display:none;">
+      加载商品失败，请稍后重试。
+    </div>
 
     <!-- 购物车 区块 -->
-    <div class="cart" id="cartSummary">
+    <div class="cart" id="cartSummary" style="display:none;">
       <h3>购物车</h3>
       <ul id="cartList"></ul>
       <div class="cart-total">
@@ -145,10 +160,9 @@
   </div>
 
   <script>
-    // ========== 1. WebApp 模式检测 ==========
-    (function() {
+    /*** 1. WebApp 模式检测 ***/
+    window.addEventListener("DOMContentLoaded", () => {
       const debugDiv = document.getElementById("debugStatus");
-
       // 检测 window.Telegram.WebApp 是否存在
       if (window.Telegram && window.Telegram.WebApp) {
         // WebApp 注入成功
@@ -159,20 +173,19 @@
           : "用户信息不可用";
         debugDiv.innerText = `✅ WebApp 模式可用（版本：${webApp.version || "N/A"}，${userInfo}）`;
         debugDiv.style.backgroundColor = "#c8e6c9"; // 绿色背景
-        // 通知 Telegram SDK 已准备就绪
-        webApp.ready();
+        webApp.ready(); // 通知 Telegram SDK 已准备就绪
       } else {
         // WebApp 未注入
         debugDiv.innerText = "❌ 未检测到 Telegram WebApp 模式，请确保在手机 Telegram 私聊中点击按钮打开本页面";
         debugDiv.style.backgroundColor = "#ef9a9a"; // 红色背景
       }
-    })();
+    });
 
-    // ========== 2. 初始化购物车 ==========
+    /*** 2. 初始化购物车 ***/
     let cart = {};
 
-    // ========== 3. 拉取商品列表 ========== 
-    // 请将下面的 exec 链接替换为你自己在 Apps Script 部署后得到的 exec URL
+    /*** 3. 拉取商品列表 ***/
+    // 请把下面链接替换为你自己部署的 Apps Script “exec” 链接（完整版）
     const SHEET_API_URL = "https://script.google.com/macros/s/你的ExecID/exec";
 
     fetch(SHEET_API_URL)
@@ -186,32 +199,31 @@
       })
       .catch(err => {
         console.error("拉取商品失败：", err);
-        document.getElementById("productList").innerHTML = "<p style='color:red;'>加载商品失败，请稍后重试。</p>";
+        document.getElementById("productError").style.display = "block";
       });
 
-    // ========== 4. 渲染商品列表 ========== 
+    /*** 4. 渲染商品列表 ***/
     function renderProducts(products) {
       const pl = document.getElementById("productList");
       pl.innerHTML = "";
 
       products.forEach(item => {
         const pid = item.id;
-        // “名称”字段示例，务必与你的 Google Sheet 表头完全一致
+        // 名称字段：先尝试 “名称”，否则尝试 “name”，否则显示 “商品”
         const name = item["名称"] || item["name"] || "商品";
 
-        // 兼容不同字段名的图片 URL，如果都没得到就用占位图
+        // 图片 URL 容错：尝试两种常见字段名，否则用占位图
         const rawImg1 = item["图片_URL"];
         const rawImg2 = item["image_url"];
         const placeholderImg = "https://via.placeholder.com/400x300?text=No+Image";
         const imgUrl = rawImg1 || rawImg2 || placeholderImg;
 
-        // 以下价格字段 key 一定要和你的 JSON 返回字段一一对应：
-        // 假设你的表头写的是 “小杯价格”、“中杯价格”、“大杯价格”
-        const priceSmall  = parseInt(item["Q"], 10) || 0;
-        const priceMedium = parseInt(item["H"], 10) || 0;
-        const priceLarge  = parseInt(item["OZ"], 10) || 0;
+        // 价格字段：必须与后台 JSON 一一对应。如果你的 Sheet 表头是 “小杯价格”、“中杯价格”、“大杯价格”，如下写法就对
+        const priceSmall  = parseInt(item["小杯价格"], 10)  || 0;
+        const priceMedium = parseInt(item["中杯价格"], 10)  || 0;
+        const priceLarge  = parseInt(item["大杯价格"], 10)  || 0;
 
-        // 标签字段示例（如果你的表头是 “标签(tag)” 或 “标签”）
+        // 标签字段：如果 Sheet 表头是 “标签(tag)” 或 “标签”，对应取值
         const tag = item["标签(tag)"] || item["标签"] || "";
 
         // 生成商品卡片
@@ -255,16 +267,19 @@
         `;
         pl.appendChild(card);
 
-        // 监听规格切换，更新对应价格显示
+        // 切换规格时更新价格显示
         document.getElementById(`size_${pid}`).addEventListener("change", () => {
           const sel = document.getElementById(`size_${pid}`);
           const unit = parseInt(sel.options[sel.selectedIndex].dataset.price, 10);
           document.getElementById(`price_${pid}`).innerText = `¥${unit}`;
         });
       });
+
+      // 显示购物车区域（只有商品加载成功后才显示）
+      document.getElementById("cartSummary").style.display = "block";
     }
 
-    // ========== 5. “加入购物车” 逻辑 ========== 
+    /*** 5. “加入购物车” 逻辑 ***/
     function addToCart(pid, name) {
       const sel = document.getElementById(`size_${pid}`);
       const size = sel.value;
@@ -291,7 +306,7 @@
       cartTotalEl.innerText = `¥${total}`;
     }
 
-    // ========== 6. “提交订单” 逻辑 ========== 
+    /*** 6. “提交订单” 逻辑 ***/
     function submitOrder() {
       if (Object.keys(cart).length === 0) {
         alert("购物车为空，请先添加商品");
