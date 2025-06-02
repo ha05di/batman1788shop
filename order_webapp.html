@@ -207,9 +207,9 @@
 
         // 以下价格字段 key 一定要和你的 JSON 返回字段一一对应：
         // 假设你的表头写的是 “小杯价格”、“中杯价格”、“大杯价格”
-        const priceSmall  = parseInt(item["小杯价格"], 10) || 0;
-        const priceMedium = parseInt(item["中杯价格"], 10) || 0;
-        const priceLarge  = parseInt(item["大杯价格"], 10) || 0;
+        const priceSmall  = parseInt(item["Q"], 10) || 0;
+        const priceMedium = parseInt(item["H"], 10) || 0;
+        const priceLarge  = parseInt(item["OZ"], 10) || 0;
 
         // 标签字段示例（如果你的表头是 “标签(tag)” 或 “标签”）
         const tag = item["标签(tag)"] || item["标签"] || "";
