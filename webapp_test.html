@@ -5,17 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
+    /* 你原先的样式保持不动 */
     body {
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       padding: 16px;
       text-align: center;
+      background-color: #263238; /* 深色背景示例 */
+      color: white;
     }
     .status-card {
-      background: #c8e6c9;
+      background: #a5d6a7;
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      color: #263238;
     }
     .verify-btn {
       background: #4CAF50;
@@ -36,24 +40,38 @@
 <body>
   <div class="status-card">
     <h3>✔️ WebApp 运行正常</h3>
-    <p>平台: <strong>android</strong></p>
-    <p>用户ID: <strong>789659853</strong></p>
+    <p>平台: <strong><span id="platform"></span></strong></p>
+    <p>用户ID: <strong><span id="userId"></span></strong></p>
   </div>
 
   <button class="verify-btn" id="sendBtn">发送验证数据</button>
 
   <script>
     const webApp = Telegram.WebApp;
+    // 把用户名、平台、用户ID 显示到页面上，便于确认
+    document.getElementById('platform').innerText = webApp.platform;
+    document.getElementById('userId').innerText = webApp.initDataUnsafe.user.id;
+
+    // 让 WebApp 窗口展开（可选）
     webApp.expand();
 
     document.getElementById('sendBtn').addEventListener('click', () => {
-      webApp.sendData(JSON.stringify({
-        userId: webApp.initDataUnsafe.user?.id,
+      // 1. 点击时弹出提示，确认点击事件已经触发
+      alert("【调试】点击事件触发，准备发送数据给 Bot");
+      
+      // 2. 生成要发送的 JSON
+      const payload = {
+        userId: webApp.initDataUnsafe.user.id,
         platform: webApp.platform,
         action: 'verify'
-      }));
+      };
+      // 3. 再次弹出完整的 JSON，确认内容没问题
+      alert("【调试】将发送给 Bot 的 JSON 数据：\n" + JSON.stringify(payload));
       
-      // 可选：关闭WebApp
+      // 4. 真正发送给 Bot
+      webApp.sendData(JSON.stringify(payload));
+
+      // 5. 如果你想测试不自动关闭，可以先注释掉下面一行
       // webApp.close();
     });
   </script>
