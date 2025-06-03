@@ -1,81 +1,108 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Telegram WebApp JS 接口 -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telegram Mini App Demo</title>
+
+  <!-- 引入 Telegram 的 WebApp JS 接口 -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #263238;
-      color: white;
-      padding: 16px;
+      font-family: "Microsoft YaHei", Arial, sans-serif;
+      margin: 0;
+      padding: 0 16px;
+      background: #f5f5f5;
+      color: #212121;
+    }
+    h1 {
       text-align: center;
+      margin: 16px 0;
+      font-size: 24px;
+      color: #333;
     }
     .status-card {
-      background: #a5d6a7;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      color: #263238;
+      background: #c8e6c9;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
-    .verify-btn {
-      background: #4CAF50;
-      color: white;
+    .status-card h3 {
+      margin: 0;
+      color: #2e7d32;
+    }
+    .status-card p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #555;
+    }
+    #sendBtn {
+      display: block;
+      width: 100%;
+      max-width: 240px;
+      margin: 0 auto;
+      background: #4caf50;
+      color: #fff;
       border: none;
-      padding: 12px 24px;
-      border-radius: 25px;
+      border-radius: 24px;
+      padding: 12px 0;
       font-size: 16px;
       cursor: pointer;
-      transition: all 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: background 0.2s, transform 0.2s;
     }
-    .verify-btn:hover {
-      background: #388E3C;
+    #sendBtn:hover {
+      background: #388e3c;
       transform: translateY(-2px);
     }
   </style>
 </head>
 <body>
+  <h1>Mini App 演示页面</h1>
+
+  <!-- 运行状态卡片 -->
   <div class="status-card">
-    <h3>✔️ WebApp 已正常加载</h3>
-    <p>平台: <strong><span id="platform"></span></strong></p>
-    <p>用户ID: <strong><span id="userId"></span></strong></p>
+    <h3>✔️ WebApp 运行正常</h3>
+    <p>平台: <span id="platform"></span></p>
+    <p>用户 ID: <span id="userId"></span></p>
   </div>
 
-  <button class="verify-btn" id="sendBtn">发送验证数据</button>
+  <!-- 发送数据按钮 -->
+  <button id="sendBtn">发送验证数据</button>
 
   <script>
     // 1. 获取 Telegram.WebApp 对象
     const webApp = Telegram.WebApp;
 
-    // 2. 把平台和用户 ID 显示到页面上，便于确认
+    // 2. 将平台和用户 ID 渲染到页面上，以便确认 WebApp 已正确加载
     document.getElementById('platform').innerText = webApp.platform;
-    document.getElementById('userId').innerText = webApp.initDataUnsafe.user.id;
+    document.getElementById('userId').innerText = webApp.initDataUnsafe?.user?.id || '未知';
 
-    // 3. 扩展 WebApp 窗口
+    // 3. 展开 WebApp 窗口，使其占满可用高度（可选）
     webApp.expand();
 
-    // 4. 点击按钮时：
+    // 4. 绑定“发送验证数据”按钮点击事件
     document.getElementById('sendBtn').addEventListener('click', () => {
-      // 第一个弹窗：确认点击事件确实触发
-      alert("【调试】点击事件被触发，马上准备调用 sendData(...)");
+      // 调试用：弹窗确认事件触发
+      alert("【调试】点击事件已触发，准备调用 sendData()");
 
-      // 构造要发送给 Bot 的 JSON
+      // 构造要发送给 Bot 的 JSON 数据
       const payload = {
-        userId: webApp.initDataUnsafe.user.id,
+        userId: webApp.initDataUnsafe?.user?.id || null,
         platform: webApp.platform,
         action: 'verify'
       };
 
-      // 第二个弹窗：确认我们要发送的数据格式没有问题
-      alert("【调试】即将发送给 Bot 的数据：\n" + JSON.stringify(payload));
+      // 调试用：弹窗展示即将发送的数据
+      alert("【调试】即将发送给 Bot 的数据：\n" + JSON.stringify(payload, null, 2));
 
-      // 真正调用 sendData
+      // 真正将 JSON 字符串发回 Bot
       webApp.sendData(JSON.stringify(payload));
 
-      // （可选）调用 close() 会立刻关闭 WebApp，回到聊天窗口
+      // 如果希望发送后自动关闭 WebApp，可以取消下面一行的注释：
       // webApp.close();
     });
   </script>
