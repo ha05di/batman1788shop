@@ -6,7 +6,11 @@
 <body>
   <script>
     Telegram.WebApp.expand();
-    alert(Telegram.WebApp.platform);
+    document.body.innerHTML = `
+      <h1>测试页面</h1>
+      <p>平台: ${Telegram.WebApp.platform || '未知'}</p>
+      <p>用户ID: ${Telegram.WebApp.initDataUnsafe?.user?.id || '未获取'}</p>
+    `;
   </script>
 </body>
 </html>
