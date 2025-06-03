@@ -1,53 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WebApp 注入测试</title>
-  <style>
-    body {
-      margin: 0; padding: 16px; 
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background-color: #f2f2f2;
-    }
-    #status {
-      padding: 12px; border-radius: 6px; text-align: center; 
-      font-size: 1rem; margin-bottom: 20px; color: #000;
-    }
-    #status.loading { background-color: #ffe082; /* 黄：检测中 */ }
-    #status.success { background-color: #c8e6c9; /* 绿：可用 */ }
-    #status.fail    { background-color: #ef9a9a; /* 红：不行 */ }
-    #info { font-size: 0.9rem; color: #444; text-align: center; }
-  </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <div id="status" class="loading">
-    ⏳ 正在检测 Telegram WebApp 模式……
-  </div>
-  <div id="info">–</div>
-
   <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const statusDiv = document.getElementById("status");
-      const infoDiv = document.getElementById("info");
-      setTimeout(() => {
-        if (window.Telegram && window.Telegram.WebApp) {
-          const webApp = window.Telegram.WebApp;
-          webApp.ready();
-          const user = webApp.initDataUnsafe && webApp.initDataUnsafe.user;
-          const name = user
-            ? user.first_name || user.username || "未知用户"
-            : "无法获取用户";
-          statusDiv.className = "success";
-          statusDiv.innerText = `✅ WebApp 模式可用（版本: ${webApp.version || "N/A"}，用户: ${name}）`;
-          infoDiv.innerText = "🌟 你已进入 Telegram 内置 WebApp 模式！";
-        } else {
-          statusDiv.className = "fail";
-          statusDiv.innerText = "❌ 未检测到 Telegram WebApp 模式";
-          infoDiv.innerText = "请在手机 Telegram 私聊里，点击下方“🌐 打开 WebApp 测试页面”按钮。";
-        }
-      }, 200);
-    });
+    Telegram.WebApp.expand();
+    alert(Telegram.WebApp.platform);
   </script>
 </body>
 </html>
