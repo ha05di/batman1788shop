@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Telegram WebApp 简易调试页</title>
+  <title>Telegram WebApp 自动发送示例</title>
 
   <!-- 1. 引入 Telegram WebApp JS -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -13,7 +13,7 @@
       font-family: "Microsoft YaHei", Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background: #f0f0f0;
+      background: #fafafa;
       text-align: center;
     }
     .card {
@@ -22,31 +22,24 @@
       padding: 16px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       margin-bottom: 24px;
+      color: #2e7d32;
     }
     .card h2 {
       margin: 0 0 8px;
-      color: #2e7d32;
+      font-size: 20px;
     }
     .card p {
       margin: 4px 0;
+      font-size: 14px;
     }
-    #btnSend {
-      background: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 24px;
-      padding: 12px 24px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    #btnSend:hover {
-      background: #388e3c;
+    #status {
+      margin-top: 16px;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <h1>WebApp 简易调试</h1>
+  <h1>WebApp 自动发送示例</h1>
 
   <div class="card">
     <h2>✔️ WebApp 已加载</h2>
@@ -54,32 +47,39 @@
     <p>用户 ID：<span id="userId"></span></p>
   </div>
 
-  <button id="btnSend">发送固定测试数据</button>
+  <p id="status">正在准备发送数据……</p>
 
   <script>
     // 2. 获取 Telegram.WebApp 对象
     const webApp = Telegram.WebApp;
 
-    // 3. 把 platform / userId 渲染出来
+    // 3. 渲染平台 / 用户 ID
     document.getElementById("platform").innerText = webApp.platform;
     document.getElementById("userId").innerText = webApp.initDataUnsafe.user?.id || "未知";
 
-    // 4. 展开 WebApp 窗口（可选，非必要）
+    // 4. （可选）展开 WebApp，使其占满可用高度
     webApp.expand();
 
-    // 5. 绑定按钮：只发送一个固定 JSON
-    document.getElementById("btnSend").addEventListener("click", () => {
-      alert("【调试】按钮点击已触发，马上调用 sendData()");
-      const payload = {
-        test: "hello_bot",
-        timestamp: Date.now()
-      };
-      alert("【调试】将发送给 Bot 的 JSON：\n" + JSON.stringify(payload));
-      webApp.sendData(JSON.stringify(payload));
+    // 5. 准备发送的固定 JSON（示例）
+    const payload = {
+      test: "hello_bot",
+      timestamp: Date.now()
+    };
 
-      // 如果你想交互后自动关闭 WebApp，加上下面这行：
+    // 6. 等待 1 秒再发送，以确保 WebApp 完全加载
+    setTimeout(() => {
+      document.getElementById("status").innerText = "✅ 正在调用 sendData() 发送数据……";
+
+      // 7. 实际调用 sendData
+      webApp.sendData(JSON.stringify(payload));
+      // 8. 可选：发送后立即关闭 WebApp
       // webApp.close();
-    });
+
+      // 9. 更新页面状态
+      setTimeout(() => {
+        document.getElementById("status").innerText = "✅ 数据已发送，请返回聊天窗口查看 Bot 回复。";
+      }, 500);
+    }, 1000);
   </script>
 </body>
 </html>
