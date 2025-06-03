@@ -1,4 +1,4 @@
-<!-- webapp_test.html -->
+<!-- 保存为 webapp_test.html，放到你的 GitHub Pages 仓库里 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Telegram WebApp 测试页面</title>
 
-  <!-- 1. 引入 Telegram WebApp JS -->
+  <!-- 引入 Telegram WebApp JS -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <style>
@@ -36,6 +36,7 @@
     #status {
       margin-top: 16px;
       color: #555;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -48,35 +49,37 @@
     <p>用户 ID：<span id="userId"></span></p>
   </div>
 
-  <p id="status">正在准备发送数据……</p>
+  <p id="status">正在准备发送测试数据……</p>
 
   <script>
-    // 2. 获取 Telegram.WebApp 对象
+    // 1. “Telegram.WebApp” 在 Telegram 内置浏览器里才会注入
     const webApp = Telegram.WebApp;
 
-    // 3. 渲染平台 / 用户 ID
+    // 2. 渲染“平台 / 用户 ID”
     document.getElementById("platform").innerText = webApp.platform;
     document.getElementById("userId").innerText = webApp.initDataUnsafe.user?.id || "未知";
 
-    // 4. （可选）展开 WebApp 窗口，使其占满可用高度
+    // 3. 可选：展开 WebApp 使其占满可用高度
     webApp.expand();
 
-    // 5. 构造即将发送的固定 JSON
-    const payload = {
-      test: "hello_bot",
-      timestamp: Date.now()
-    };
-
-    // 6. 等待 1 秒后自动调用 sendData()
+    // 4. 1 秒后自动调用 sendData 来把 JSON 发送给 Bot
     setTimeout(() => {
       document.getElementById("status").innerText = "✅ 正在发送测试数据……";
+
+      // 构造要发送的固定 JSON（示例）
+      const payload = {
+        test: "hello_bot",
+        timestamp: Date.now()
+      };
+      // 调用 sendData
       webApp.sendData(JSON.stringify(payload));
 
-      // 如果想让 WebApp 发送后自动关闭，可取消下面这一行注释
+      // 如果需要发送完自动关闭 WebApp，请取消下面一行的注释
       // webApp.close();
 
       setTimeout(() => {
-        document.getElementById("status").innerText = "✅ 测试数据已发送，请返回聊天窗口查看 Bot 回复。";
+        document.getElementById("status").innerText =
+          "✅ 测试数据已发送，请返回聊天窗口查看 Bot 回复。";
       }, 500);
     }, 1000);
   </script>
