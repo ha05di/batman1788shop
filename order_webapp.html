@@ -3,340 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MENU</title>
+  <title>WebApp 注入测试</title>
   <style>
-    /* ---------- 全局样式 ---------- */
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 16px; 
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background-color: #f9f9f9;
+      background-color: #f2f2f2;
     }
-    .container {
-      padding: 12px 16px;
+    #status {
+      padding: 12px; border-radius: 6px; text-align: center; 
+      font-size: 1rem; margin-bottom: 20px; color: #000;
     }
-    h2 {
-      margin: 16px 0;
-      font-size: 1.4rem;
-      color: #333;
-    }
-
-    /* ---------- “WebApp 检测” 提示栏 ---------- */
-    #debugStatus {
-      padding: 8px;
-      background-color: #ffe082; /* 黄色：加载中 */
-      color: #000;
-      font-size: 0.9rem;
-      text-align: center;
-      transition: background-color 0.3s;
-    }
-
-    /* ---------- 商品卡片样式 ---------- */
-    .product {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      margin-bottom: 16px;
-      padding: 12px;
-      position: relative;
-    }
-    .product img {
-      display: block;
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-    .product h3 {
-      margin: 12px 0 8px;
-      font-size: 1.1rem;
-      color: #333;
-    }
-    .specs, .quantity {
-      margin: 8px 0;
-    }
-    .specs select, .quantity input {
-      padding: 6px 8px;
-      font-size: 14px;
-      margin-top: 4px;
-    }
-    .price {
-      font-size: 16px;
-      color: #e53935;
-      margin-top: 8px;
-    }
-    .btn-cart {
-      margin-top: 8px;
-      background-color: #1e88e5;
-      color: #fff;
-      border: none;
-      padding: 10px 0;
-      width: 100%;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .btn-cart:hover {
-      background-color: #1565c0;
-    }
-
-    /* ---------- 购物车样式 ---------- */
-    .cart {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      padding: 12px;
-      margin-top: 24px;
-    }
-    .cart h3 {
-      margin-bottom: 8px;
-      font-size: 1.2rem;
-      color: #333;
-    }
-    #cartList {
-      list-style: none;
-      padding-left: 0;
-      margin: 0;
-    }
-    #cartList li {
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-      color: #555;
-    }
-    .cart-total {
-      text-align: right;
-      margin-top: 8px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: #333;
-    }
-    .btn-order {
-      margin-top: 12px;
-      background-color: #43a047;
-      color: #fff;
-      border: none;
-      padding: 12px 0;
-      width: 100%;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .btn-order:hover {
-      background-color: #2e7d32;
-    }
-    /* “加载失败” 文本 */
-    .error-text {
-      color: #e53935;
-      font-size: 1rem;
-      text-align: center;
-      margin-top: 16px;
-    }
+    #status.loading { background-color: #ffe082; /* 黄：检测中 */ }
+    #status.success { background-color: #c8e6c9; /* 绿：可用 */ }
+    #status.fail    { background-color: #ef9a9a; /* 红：不行 */ }
+    #info { font-size: 0.9rem; color: #444; text-align: center; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- WebApp 模式检测区域 -->
-    <div id="debugStatus">
-      正在检测 Telegram WebApp 模式……
-    </div>
-
-    <h2>点餐中心</h2>
-    <!-- 商品列表 容器 -->
-    <div id="productList"></div>
-    <!-- 若加载失败，就在这里显示错误 -->
-    <div id="productError" class="error-text" style="display:none;">
-      加载商品失败，请稍后重试。
-    </div>
-
-    <!-- 购物车 区块 -->
-    <div class="cart" id="cartSummary" style="display:none;">
-      <h3>购物车</h3>
-      <ul id="cartList"></ul>
-      <div class="cart-total">
-        总计：<span id="cartTotal">¥0</span>
-      </div>
-      <button class="btn-order" onclick="submitOrder()">提交订单</button>
-    </div>
+  <div id="status" class="loading">
+    ⏳ 正在检测 Telegram WebApp 模式……
   </div>
+  <div id="info">–</div>
 
   <script>
-    /*** 1. WebApp 模式检测 ***/
     window.addEventListener("DOMContentLoaded", () => {
-      const debugDiv = document.getElementById("debugStatus");
-      // 检测 window.Telegram.WebApp 是否存在
-      if (window.Telegram && window.Telegram.WebApp) {
-        // WebApp 注入成功
-        const webApp = window.Telegram.WebApp;
-        const user = webApp.initDataUnsafe && webApp.initDataUnsafe.user;
-        const userInfo = user
-          ? `用户：${user.first_name || ""}（ID: ${user.id}）`
-          : "用户信息不可用";
-        debugDiv.innerText = `✅ WebApp 模式可用（版本：${webApp.version || "N/A"}，${userInfo}）`;
-        debugDiv.style.backgroundColor = "#c8e6c9"; // 绿色背景
-        webApp.ready(); // 通知 Telegram SDK 已准备就绪
-      } else {
-        // WebApp 未注入
-        debugDiv.innerText = "❌ 未检测到 Telegram WebApp 模式，请确保在手机 Telegram 私聊中点击按钮打开本页面";
-        debugDiv.style.backgroundColor = "#ef9a9a"; // 红色背景
-      }
-    });
-
-    /*** 2. 初始化购物车 ***/
-    let cart = {};
-
-    /*** 3. 拉取商品列表 ***/
-    // 请把下面链接替换为你自己部署的 Apps Script “exec” 链接（完整版）
-    const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyHi8NIV9in1xqC_sl4Cdwhrtnp1ywaAMQE5Zzb2e-EUiiGA8zQa-bgT7LLeF9ea5Cg/exec";
-
-    fetch(SHEET_API_URL)
-      .then(resp => {
-        console.log("Fetch 状态码：", resp.status);
-        return resp.json();
-      })
-      .then(products => {
-        console.log("Fetch 返回的第1个商品对象：", products[0], "字段列表：", Object.keys(products[0]));
-        renderProducts(products);
-      })
-      .catch(err => {
-        console.error("拉取商品失败：", err);
-        document.getElementById("productError").style.display = "block";
-      });
-
-    /*** 4. 渲染商品列表 ***/
-    function renderProducts(products) {
-      const pl = document.getElementById("productList");
-      pl.innerHTML = "";
-
-      products.forEach(item => {
-        const pid = item.id;
-        // 名称字段：先尝试 “名称”，否则尝试 “name”，否则显示 “商品”
-        const name = item["名称"] || item["name"] || "商品";
-
-        // 图片 URL 容错：尝试两种常见字段名，否则用占位图
-        const rawImg1 = item["图片_URL"];
-        const rawImg2 = item["image_url"];
-        const placeholderImg = "https://via.placeholder.com/400x300?text=No+Image";
-        const imgUrl = rawImg1 || rawImg2 || placeholderImg;
-
-        // 价格字段：必须与后台 JSON 一一对应。如果你的 Sheet 表头是 “小杯价格”、“中杯价格”、“大杯价格”，如下写法就对
-        const priceSmall  = parseInt(item["Q"], 10)  || 0;
-        const priceMedium = parseInt(item["H"], 10)  || 0;
-        const priceLarge  = parseInt(item["OZ"], 10)  || 0;
-
-        // 标签字段：如果 Sheet 表头是 “标签(tag)” 或 “标签”，对应取值
-        const tag = item["标签(tag)"] || item["标签"] || "";
-
-        // 生成商品卡片
-        let badgeHTML = "";
-        if (typeof tag === "string") {
-          if (tag.toLowerCase() === "hot") {
-            badgeHTML = '<div style="position:absolute; top:8px; right:8px; background:#e53935; color:#fff; padding:4px 8px; border-radius:4px; font-size:0.85rem;">Hot</div>';
-          } else if (tag.toLowerCase() === "new") {
-            badgeHTML = '<div style="position:absolute; top:8px; right:8px; background:#43a047; color:#fff; padding:4px 8px; border-radius:4px; font-size:0.85rem;">New</div>';
-          }
+      const statusDiv = document.getElementById("status");
+      const infoDiv = document.getElementById("info");
+      setTimeout(() => {
+        if (window.Telegram && window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp;
+          webApp.ready();
+          const user = webApp.initDataUnsafe && webApp.initDataUnsafe.user;
+          const name = user
+            ? user.first_name || user.username || "未知用户"
+            : "无法获取用户";
+          statusDiv.className = "success";
+          statusDiv.innerText = `✅ WebApp 模式可用（版本: ${webApp.version || "N/A"}，用户: ${name}）`;
+          infoDiv.innerText = "🌟 你已进入 Telegram 内置 WebApp 模式！";
+        } else {
+          statusDiv.className = "fail";
+          statusDiv.innerText = "❌ 未检测到 Telegram WebApp 模式";
+          infoDiv.innerText = "请在手机 Telegram 私聊里，点击下方“🌐 打开 WebApp 测试页面”按钮。";
         }
-
-        const card = document.createElement("div");
-        card.className = "product";
-        card.innerHTML = `
-          <div style="position: relative;">
-            <img 
-              src="${imgUrl}" 
-              alt="${name}" 
-              onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=No+Image';" 
-            />
-            ${badgeHTML}
-          </div>
-          <h3>${name}</h3>
-          <div class="specs">
-            <label>规格：
-              <select id="size_${pid}">
-                <option value="small" data-price="${priceSmall}">小杯 ¥${priceSmall}</option>
-                <option value="medium" data-price="${priceMedium}">中杯 ¥${priceMedium}</option>
-                <option value="large" data-price="${priceLarge}">大杯 ¥${priceLarge}</option>
-              </select>
-            </label>
-          </div>
-          <div class="quantity">
-            <label>数量：
-              <input type="number" id="qty_${pid}" value="1" min="1" />
-            </label>
-          </div>
-          <div class="price" id="price_${pid}">¥${priceSmall}</div>
-          <button class="btn-cart" onclick="addToCart('${pid}', '${name}')">加入购物车</button>
-        `;
-        pl.appendChild(card);
-
-        // 切换规格时更新价格显示
-        document.getElementById(`size_${pid}`).addEventListener("change", () => {
-          const sel = document.getElementById(`size_${pid}`);
-          const unit = parseInt(sel.options[sel.selectedIndex].dataset.price, 10);
-          document.getElementById(`price_${pid}`).innerText = `¥${unit}`;
-        });
-      });
-
-      // 显示购物车区域（只有商品加载成功后才显示）
-      document.getElementById("cartSummary").style.display = "block";
-    }
-
-    /*** 5. “加入购物车” 逻辑 ***/
-    function addToCart(pid, name) {
-      const sel = document.getElementById(`size_${pid}`);
-      const size = sel.value;
-      const unitPrice = parseInt(sel.options[sel.selectedIndex].dataset.price, 10);
-      const qty = parseInt(document.getElementById(`qty_${pid}`).value, 10) || 1;
-      const subtotal = unitPrice * qty;
-      cart[pid] = { name, size, price: unitPrice, quantity: qty, subtotal };
-      renderCart();
-    }
-
-    // 渲染购物车列表
-    function renderCart() {
-      const cartList = document.getElementById("cartList");
-      const cartTotalEl = document.getElementById("cartTotal");
-      cartList.innerHTML = "";
-      let total = 0;
-      Object.keys(cart).forEach(pid => {
-        const it = cart[pid];
-        total += it.subtotal;
-        const li = document.createElement("li");
-        li.innerText = `${it.name}（${it.size}） x ${it.quantity} → ¥${it.subtotal}`;
-        cartList.appendChild(li);
-      });
-      cartTotalEl.innerText = `¥${total}`;
-    }
-
-    /*** 6. “提交订单” 逻辑 ***/
-    function submitOrder() {
-      if (Object.keys(cart).length === 0) {
-        alert("购物车为空，请先添加商品");
-        return;
-      }
-
-      const tg = window.Telegram && window.Telegram.WebApp;
-      const tgUser = tg ? tg.initDataUnsafe.user : null;
-
-      const orderData = {
-        action: "create_order",
-        order: {
-          items: Object.keys(cart).map(pid => cart[pid]),
-          total: Object.values(cart).reduce((sum, it) => sum + it.subtotal, 0),
-          timestamp: new Date().toISOString()
-        },
-        user: tgUser
-      };
-
-      if (tg && typeof tg.sendData === "function") {
-        // 真正把订单数据发给 Bot 后端
-        tg.sendData(JSON.stringify(orderData));
-      } else {
-        // 如果不是 WebApp 模式，或者 sendData 不可用，给出提示
-        const debugDiv = document.getElementById("debugStatus");
-        debugDiv.innerText = "⚠️ sendData 方法不可用：当前不是 Telegram WebApp 模式";
-        debugDiv.style.backgroundColor = "#ffcc80"; // 橙色警示
-        console.log("模拟发送订单：", orderData);
-      }
-    }
+      }, 200);
+    });
   </script>
 </body>
 </html>
