@@ -1,111 +1,116 @@
-<!-- webapp_test.html -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Telegram WebApp 测试页面（带手动按钮）</title>
-  <!-- 一定要加载这行 JS，Telegram 内置浏览器才会注入 “Telegram.WebApp” 对象 -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WebApp 测试页面</title>
+  <!-- 一定要引用 Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
-      font-family: "Microsoft YaHei", Arial, sans-serif;
-      margin: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       padding: 20px;
-      background: #fafafa;
+      background-color: #f5f7fa;
+      color: #333;
       text-align: center;
     }
-    .card {
-      background: #c8e6c9;
+    .box {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
       border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      margin-bottom: 24px;
-      color: #2e7d32;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 20px;
+    .status {
+      margin-bottom: 20px;
+      font-size: 18px;
+      line-height: 1.5;
     }
-    .card p {
-      margin: 4px 0;
-      font-size: 14px;
-    }
-    #status {
-      margin-top: 16px;
-      color: #555;
-      font-size: 14px;
-    }
-    #btnManual {
-      margin-top: 24px;
-      padding: 10px 16px;
-      background: #42a5f5;
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #0088cc;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
     }
-    #btnManual:active {
-      background: #1e88e5;
+    .button:active {
+      background-color: #006699;
     }
   </style>
 </head>
 <body>
-  <h1>WebApp 测试页面（手动+自动）</h1>
-
-  <div class="card">
-    <h2>✔️ WebApp 已加载</h2>
-    <p>平台：<span id="platform">未知</span></p>
-    <p>用户 ID：<span id="userId">未知</span></p>
+  <div class="box">
+    <h2>WebApp 测试页面</h2>
+    <div id="status" class="status">
+      🔄 检测 Telegram WebApp 模式……
+    </div>
+    <!-- 手动发送按钮，仅当自动发送失效时使用 -->
+    <button id="manualBtn" class="button" style="display:none;">📤 手动发送测试数据</button>
   </div>
 
-  <p id="status">等待用户操作或自动发送……</p>
-
-  <!-- 手动触发按钮：点击后也会发送同样的 JSON -->
-  <button id="btnManual">📤 手动发送测试数据</button>
-
   <script>
-    // 1. 先判断是否在 Telegram 内置浏览器里
-    if (!window.Telegram || !Telegram.WebApp) {
-      // 如果不是来自 Telegram WebView，就提示用户
-      document.getElementById("status").innerText = "⚠️ 请从 Telegram 中点击按钮打开此页面。";
-    } else {
-      const webApp = Telegram.WebApp;
+    // 等待 DOM 加载
+    document.addEventListener("DOMContentLoaded", function() {
+      // 从全局对象获取 Telegram WebApp 实例
+      const webApp = window.Telegram.WebApp;
 
-      // 2. 渲染“平台”与“用户 ID”
-      document.getElementById("platform").innerText = webApp.platform;
-      document.getElementById("userId").innerText = webApp.initDataUnsafe.user?.id || "未知";
+      // 第一步：告诉 Telegram 内置浏览器，我们的页面已经准备就绪
+      webApp.ready();
 
-      // 3. 先自动展开窗口
-      webApp.expand();
+      // 第二步：更新页面状态，显示“已加载”
+      const statusDiv = document.getElementById("status");
+      statusDiv.innerHTML = `
+        ✔️ WebApp 已加载<br/>
+        平台：<strong>${webApp.platform || "unknown"}</strong><br/>
+        用户 ID：<strong>${webApp.initDataUnsafe?.user?.id || "未知"}</strong><br/>
+        等待自动发送测试数据……
+      `;
 
-      // 4. 自动定时（1 秒后）发送一次数据
-      setTimeout(() => {
-        sendPayload();  // 调用下方封装的发送函数
-      }, 1000);
-
-      // 5. “手动发送”按钮点击后，也会触发同样的逻辑
-      document.getElementById("btnManual").addEventListener("click", () => {
-        sendPayload();
-      });
-
-      // 6. 统一的“发送数据”函数
-      function sendPayload() {
-        document.getElementById("status").innerText = "⏳ 正在发送测试数据……";
-        console.log("sendData 前", Date.now());
+      // 第三步：尝试在 1 秒后自动调用 sendData()
+      setTimeout(function() {
+        // 准备要发送的 JSON 字符串
         const payload = {
           test: "hello_bot",
           timestamp: Date.now()
         };
+        // 切换状态文字为“正在发送”
+        statusDiv.innerHTML = `
+          ⏳ 正在发送测试数据……<br/>
+          请稍候……
+        `;
+        // 执行 sendData()
         webApp.sendData(JSON.stringify(payload));
-        console.log("sendData 后", Date.now());
-        setTimeout(() => {
-          document.getElementById("status").innerText =
-            "✅ 测试数据已发送，请返回聊天窗口查看 Bot 回复。";
+        // 0.5 秒后切换为“已发送”
+        setTimeout(function() {
+          statusDiv.innerHTML = `
+            ✅ 测试数据已发送，请返回聊天窗口查看 Bot 回复。
+          `;
         }, 500);
-      }
-    }
+      }, 1000);
+
+      // 第四步：如果自动发送失败，用户点击“手动发送”按钮时也能触发 sendData
+      const manualBtn = document.getElementById("manualBtn");
+      // 当页面滑动或超时 2 秒后，将按钮显示出来，供手动补救
+      setTimeout(function() {
+        manualBtn.style.display = "inline-block";
+      }, 2000);
+      manualBtn.addEventListener("click", function() {
+        const payload = {
+          test: "hello_manual_click",
+          timestamp: Date.now()
+        };
+        statusDiv.innerHTML = "⏳ 正在手动发送测试数据……";
+        webApp.sendData(JSON.stringify(payload));
+        setTimeout(function() {
+          statusDiv.innerHTML = "✅ 手动测试数据已发送，请返回聊天窗口查看 Bot 回复。";
+        }, 500);
+      });
+    });
   </script>
 </body>
 </html>
