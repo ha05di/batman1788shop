@@ -1,16 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    /* 保留你的原有CSS样式 */
+    body { margin: 0; padding: 16px; font-family: sans-serif; }
+    #status { padding: 12px; border-radius: 6px; text-align: center; margin-bottom: 20px; }
+    #status.loading { background: #ffe082; } /* 检测中 */
+    #status.success { background: #c8e6c9; } /* 成功 */
+    #status.fail { background: #ef9a9a; } /* 失败 */
+  </style>
 </head>
 <body>
+  <div id="status" class="loading">⏳ 检测中...</div>
+  
   <script>
-    Telegram.WebApp.expand();
-    document.body.innerHTML = `
-      <h1>测试页面</h1>
-      <p>平台: ${Telegram.WebApp.platform || '未知'}</p>
-      <p>用户ID: ${Telegram.WebApp.initDataUnsafe?.user?.id || '未获取'}</p>
-    `;
+    window.addEventListener("DOMContentLoaded", () => {
+      const statusDiv = document.getElementById("status");
+      
+      if (window.Telegram?.WebApp) {
+        const webApp = Telegram.WebApp;
+        webApp.expand(); // 确保全屏显示
+        
+        // 成功状态
+        statusDiv.className = "success";
+        statusDiv.innerHTML = `
+          ✅ <strong>WebApp 运行正常</strong><br>
+          平台: ${webApp.platform}<br>
+          用户ID: ${webApp.initDataUnsafe.user?.id || '未获取'}
+        `;
+        
+        // 示例：添加发送数据回Bot的按钮
+        const btn = document.createElement("button");
+        btn.textContent = "发送验证数据";
+        btn.onclick = () => {
+          webApp.sendData(JSON.stringify({
+            action: "verify",
+            userId: webApp.initDataUnsafe.user?.id
+          }));
+          webApp.close();
+        };
+        document.body.appendChild(btn);
+        
+      } else {
+        // 非Telegram环境
+        statusDiv.className = "fail";
+        statusDiv.textContent = "❌ 请通过Telegram Bot打开此页面";
+      }
+    });
   </script>
 </body>
 </html>
