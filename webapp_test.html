@@ -1,85 +1,82 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Telegram WebApp 自动发送示例</title>
-
-  <!-- 1. 引入 Telegram WebApp JS -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram WebApp Demo</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
   <style>
     body {
-      font-family: "Microsoft YaHei", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       margin: 0;
       padding: 20px;
-      background: #fafafa;
+      background: #f5f5f5;
       text-align: center;
     }
     .card {
-      background: #c8e6c9;
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      margin-bottom: 24px;
-      color: #2e7d32;
-    }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 20px;
-    }
-    .card p {
-      margin: 4px 0;
-      font-size: 14px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 400px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     #status {
-      margin-top: 16px;
-      color: #555;
+      color: #666;
+      margin-top: 20px;
+    }
+    button {
+      background: #40a7e3;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>WebApp 自动发送示例</h1>
-
   <div class="card">
-    <h2>✔️ WebApp 已加载</h2>
-    <p>平台：<span id="platform"></span></p>
-    <p>用户 ID：<span id="userId"></span></p>
+    <h2>WebApp 演示</h2>
+    <p>平台: <strong id="platform"></strong></p>
+    <p>用户ID: <strong id="user-id"></strong></p>
+    
+    <button id="send-btn">发送测试数据</button>
+    <p id="status">等待操作...</p>
   </div>
 
-  <p id="status">正在准备发送数据……</p>
-
   <script>
-    // 2. 获取 Telegram.WebApp 对象
+    // 初始化Telegram WebApp
     const webApp = Telegram.WebApp;
-
-    // 3. 渲染平台 / 用户 ID
-    document.getElementById("platform").innerText = webApp.platform;
-    document.getElementById("userId").innerText = webApp.initDataUnsafe.user?.id || "未知";
-
-    // 4. （可选）展开 WebApp，使其占满可用高度
-    webApp.expand();
-
-    // 5. 准备发送的固定 JSON（示例）
-    const payload = {
-      test: "hello_bot",
-      timestamp: Date.now()
-    };
-
-    // 6. 等待 1 秒再发送，以确保 WebApp 完全加载
-    setTimeout(() => {
-      document.getElementById("status").innerText = "✅ 正在调用 sendData() 发送数据……";
-
-      // 7. 实际调用 sendData
+    webApp.expand(); // 展开全屏
+    
+    // 显示平台信息
+    document.getElementById('platform').textContent = webApp.platform;
+    document.getElementById('user-id').textContent = 
+      webApp.initDataUnsafe.user?.id || '未获取';
+    
+    // 发送数据到Bot
+    document.getElementById('send-btn').addEventListener('click', () => {
+      const payload = {
+        action: "test",
+        userId: webApp.initDataUnsafe.user?.id,
+        timestamp: Date.now(),
+        randomValue: Math.random().toFixed(4)
+      };
+      
+      document.getElementById('status').textContent = "发送中...";
+      
+      // 发送数据
       webApp.sendData(JSON.stringify(payload));
-      // 8. 可选：发送后立即关闭 WebApp
-      // webApp.close();
-
-      // 9. 更新页面状态
+      
+      // 3秒后关闭（可选）
       setTimeout(() => {
-        document.getElementById("status").innerText = "✅ 数据已发送，请返回聊天窗口查看 Bot 回复。";
-      }, 500);
-    }, 1000);
+        document.getElementById('status').textContent = "数据已发送 ✅";
+        webApp.close();
+      }, 3000);
+    });
   </script>
 </body>
 </html>
