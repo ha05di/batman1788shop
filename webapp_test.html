@@ -1,14 +1,12 @@
-<!-- 保存为 webapp_test.html，放到你的 GitHub Pages 仓库里 -->
+<!-- webapp_test.html -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Telegram WebApp 测试页面</title>
-
-  <!-- 引入 Telegram WebApp JS -->
+  <title>Telegram WebApp 测试页面（带手动按钮）</title>
+  <!-- 一定要加载这行 JS，Telegram 内置浏览器才会注入 “Telegram.WebApp” 对象 -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
   <style>
     body {
       font-family: "Microsoft YaHei", Arial, sans-serif;
@@ -38,50 +36,76 @@
       color: #555;
       font-size: 14px;
     }
+    #btnManual {
+      margin-top: 24px;
+      padding: 10px 16px;
+      background: #42a5f5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #btnManual:active {
+      background: #1e88e5;
+    }
   </style>
 </head>
 <body>
-  <h1>WebApp 测试页面</h1>
+  <h1>WebApp 测试页面（手动+自动）</h1>
 
   <div class="card">
     <h2>✔️ WebApp 已加载</h2>
-    <p>平台：<span id="platform"></span></p>
-    <p>用户 ID：<span id="userId"></span></p>
+    <p>平台：<span id="platform">未知</span></p>
+    <p>用户 ID：<span id="userId">未知</span></p>
   </div>
 
-  <p id="status">正在准备发送测试数据……</p>
+  <p id="status">等待用户操作或自动发送……</p>
+
+  <!-- 手动触发按钮：点击后也会发送同样的 JSON -->
+  <button id="btnManual">📤 手动发送测试数据</button>
 
   <script>
-    // 1. “Telegram.WebApp” 在 Telegram 内置浏览器里才会注入
-    const webApp = Telegram.WebApp;
+    // 1. 先判断是否在 Telegram 内置浏览器里
+    if (!window.Telegram || !Telegram.WebApp) {
+      // 如果不是来自 Telegram WebView，就提示用户
+      document.getElementById("status").innerText = "⚠️ 请从 Telegram 中点击按钮打开此页面。";
+    } else {
+      const webApp = Telegram.WebApp;
 
-    // 2. 渲染“平台 / 用户 ID”
-    document.getElementById("platform").innerText = webApp.platform;
-    document.getElementById("userId").innerText = webApp.initDataUnsafe.user?.id || "未知";
+      // 2. 渲染“平台”与“用户 ID”
+      document.getElementById("platform").innerText = webApp.platform;
+      document.getElementById("userId").innerText = webApp.initDataUnsafe.user?.id || "未知";
 
-    // 3. 可选：展开 WebApp 使其占满可用高度
-    webApp.expand();
+      // 3. 先自动展开窗口
+      webApp.expand();
 
-    // 4. 1 秒后自动调用 sendData 来把 JSON 发送给 Bot
-    setTimeout(() => {
-      document.getElementById("status").innerText = "✅ 正在发送测试数据……";
-
-      // 构造要发送的固定 JSON（示例）
-      const payload = {
-        test: "hello_bot",
-        timestamp: Date.now()
-      };
-      // 调用 sendData
-      webApp.sendData(JSON.stringify(payload));
-
-      // 如果需要发送完自动关闭 WebApp，请取消下面一行的注释
-      // webApp.close();
-
+      // 4. 自动定时（1 秒后）发送一次数据
       setTimeout(() => {
-        document.getElementById("status").innerText =
-          "✅ 测试数据已发送，请返回聊天窗口查看 Bot 回复。";
-      }, 500);
-    }, 1000);
+        sendPayload();  // 调用下方封装的发送函数
+      }, 1000);
+
+      // 5. “手动发送”按钮点击后，也会触发同样的逻辑
+      document.getElementById("btnManual").addEventListener("click", () => {
+        sendPayload();
+      });
+
+      // 6. 统一的“发送数据”函数
+      function sendPayload() {
+        document.getElementById("status").innerText = "⏳ 正在发送测试数据……";
+        console.log("sendData 前", Date.now());
+        const payload = {
+          test: "hello_bot",
+          timestamp: Date.now()
+        };
+        webApp.sendData(JSON.stringify(payload));
+        console.log("sendData 后", Date.now());
+        setTimeout(() => {
+          document.getElementById("status").innerText =
+            "✅ 测试数据已发送，请返回聊天窗口查看 Bot 回复。";
+        }, 500);
+      }
+    }
   </script>
 </body>
 </html>
