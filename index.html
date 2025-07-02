@@ -55,9 +55,11 @@
     .menu-item {
       display: flex; background: var(--bat-card); border-radius: 18px;
       box-shadow: 0 3px 14px #ffe02e1b, 0 0 0 1.6px #ffe02e33;
-      margin:0 12px 18px 12px; padding: 13px 12px; align-items: flex-start;
+      margin:0 12px 18px 12px; padding: 13px 12px 24px 12px; align-items: flex-start;
       border: 1.2px solid var(--bat-gold);
       transition:.15s;
+      position: relative;
+      min-height: 150px;
     }
     .menu-img {
       width: 68px; height: 68px; border-radius: 13px; object-fit: cover;
@@ -65,7 +67,7 @@
       box-shadow:0 2px 10px #ffe02e3a;
       flex-shrink: 0;
     }
-    .menu-info { flex:1; min-width: 0;}
+    .menu-info { flex:1; min-width: 0; position: relative;}
     .menu-name {
       font-size: 1.12em; font-weight: 700; margin-bottom: 2.5px;
       color: var(--bat-gold); display: flex; align-items:center;
@@ -84,25 +86,39 @@
     }
     .menu-title { color:var(--bat-gold); font-size:.95em; margin-bottom:1px; margin-right:4px;}
     .menu-thccbd { color:#ffe02e; font-size:0.97em; font-weight:500; margin-bottom:2px; margin-right:10px;}
-    .menu-specs { margin:5px 0 0 0; display: flex; gap:11px; flex-wrap: wrap;}
-    .menu-spec { background: #2d2c22; color:var(--bat-gold); font-size:1.01em; border-radius:7px;
-      padding:2px 11px; margin-right:2px; display:inline-block;
-      border:1.1px solid #ffe02e;
-      box-shadow:0 1px 6px #ffe02e22;}
-    .menu-price { color: #ffe02e; font-weight: 800; font-size:1.08em; margin-left:4px;}
     .menu-desc { font-size:.97em; color:#f8f6c7; margin:7px 0 0 0; line-height:1.48; text-shadow:0 1px 4px #1a17084f;}
+    .menu-bottom-prices {
+      display: flex;
+      gap: 13px;
+      position: absolute;
+      left: 0; right: 0; bottom: 10px;
+      justify-content: flex-start;
+      padding: 0 10px;
+      z-index: 1;
+    }
+    .menu-spec {
+      background: #2d2c22; color:var(--bat-gold); font-size:1.01em; border-radius:7px;
+      padding:2px 11px; margin-right:2px; display:inline-block; border:1.1px solid #ffe02e;
+      box-shadow:0 1px 6px #ffe02e22;
+      margin-bottom:0;
+    }
+    .menu-price {
+      color: #ffe02e; font-weight: 800; font-size:1.08em; margin-left:4px;
+    }
     .footer { position:fixed; left:0; bottom:0; width:100vw; color:#ffc400; background:#18191b;
       font-size:.98em; text-align:center; padding:12px 0 9px 0; z-index:22; border-top: 1.5px solid #2c2c2e;}
     a { color: #ffe02e; text-decoration:underline; }
     @media (max-width:530px) {
       .menu-wrap { padding: 5px 0 63px 0;}
-      .menu-item { margin: 0 3vw 15px 3vw; padding: 10px 5px;}
+      .menu-item { margin: 0 3vw 15px 3vw; padding: 10px 5px 34px 5px;}
       .menu-img { width:54px; height:54px; margin-right:7px;}
       .menu-name { font-size: 1em;}
+      .menu-bottom-prices { gap: 7px; padding: 0 5px; }
     }
     @media (max-width:400px){
       .menu-item { flex-direction: column; align-items: stretch;}
       .menu-img { margin: 0 0 10px 0; }
+      .menu-bottom-prices { justify-content: center;}
     }
   </style>
 </head>
@@ -149,7 +165,6 @@
           let unitWidth = marquee.offsetWidth;
           let totalWidth = unitWidth * 2;
           pos -= speed;
-          // 只有当所有内容都完全走出左侧才重置
           if (Math.abs(pos) >= unitWidth) pos = 0;
           inner.style.transform = `translateX(${pos}px)`;
           requestAnimationFrame(scroll);
@@ -162,16 +177,16 @@
       .then(res=>res.json())
       .then(rows=>{
         const html = rows.map(obj=>{
-          // 多规格
-          let specs = '';
+          // 价钱横排按钮
+          let priceBtns = '';
           for(let i=1;i<=3;i++){
             if(obj['spec'+i] && obj['price'+i]){
-              specs += `<span class="menu-spec">${obj['spec'+i]}<span class="menu-price">${obj['price'+i]}</span></span>`;
+              priceBtns += `<span class="menu-spec">${obj['spec'+i]}<span class="menu-price">${obj['price'+i]}</span></span>`;
             }
           }
-          // THC/CBD合成
           let thccbd = obj.thccbd || '';
           if(!thccbd && (obj.thc || obj.cbd)) thccbd = (obj.thc?obj.thc:'')+(obj.cbd?(' / '+obj.cbd):'');
+
           return `
             <div class="menu-item">
               ${obj.img ? `<img class="menu-img" src="${obj.img}" loading="lazy"/>` : ""}
@@ -185,8 +200,8 @@
                   ${obj.title ? `<span class="menu-title">${obj.title}</span>` : ""}
                   ${thccbd ? `<span class="menu-thccbd">THC/CBD: ${thccbd}</span>` : ""}
                 </div>
-                <div class="menu-specs">${specs}</div>
                 ${obj.desc ? `<div class="menu-desc">${obj.desc}</div>` : ""}
+                <div class="menu-bottom-prices">${priceBtns}</div>
               </div>
             </div>
           `;
