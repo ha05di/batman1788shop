@@ -2,113 +2,104 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Batman1788 Menu</title>
+  <title>KFC 420 Menu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
-      --bat-black: #18191b;
-      --bat-card: rgba(35,36,39,0.90);
-      --bat-gold: #ffe02e;
-      --bat-yellow: #ffdf2b;
-      --bat-gray: #eee;
+      --kfc-cyan: #27c4c2;
+      --kfc-cyan-dark: #169ca4;
+      --kfc-cyan-light: #78eceb;
+      --kfc-card: #1a2224;
+      --kfc-white: #fff;
+      --kfc-gray: #ecf9f9;
+      --kfc-shadow: 0 3px 20px #27c4c221, 0 1px 0 #28e4e41a;
     }
     body {
-      margin: 0; background: var(--bat-black); color: #fff;
+      margin: 0; background: #182224; color: var(--kfc-white);
       font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
     }
     .header {
-      padding: 14px 0 7px 0;
+      padding: 14px 0 6px 0;
       text-align: center;
       font-size: 1.25em;
       font-weight: 800;
       letter-spacing: 2px;
-      background: var(--bat-black);
-      color: var(--bat-gold);
-      text-shadow: 0 2px 24px #000, 0 1px 0 #fff3;
-      border-bottom: 1.5px solid #2c2c2e;
-      position: sticky; top: 0; z-index: 9;
+      background: #182224;
+      color: var(--kfc-cyan-light);
+      border-bottom: 1.5px solid #2c3e3e;
+      position: sticky; top: 0; z-index: 11;
+      box-shadow: 0 1px 16px #1bc1be1a;
     }
-    .header .bat-logo {
-      font-size: 1.4em;
+    .header .kfc-logo {
+      height: 32px;
       vertical-align: middle;
       margin-right: 9px;
-      filter: drop-shadow(0 2px 4px #ffe02e55);
+      border-radius: 8px;
+      box-shadow: 0 1px 7px #0bd5e044;
+      background: #fff;
     }
     .marquee-wrap {
-      background: #2a2927;
-      border-bottom: 1.2px solid #282828;
+      background: #182c2d;
+      border-bottom: 1.2px solid #28e4e426;
       overflow: hidden;
       position: sticky;
       top: 0;
-      z-index: 22;
+      z-index: 10;
       height: 38px;
     }
-    .marquee-text {
-      color: var(--bat-gold);
-      font-size: 1.03em; font-weight: 600; line-height:38px;
-      white-space: nowrap;
-      position: sticky;top: 0;z-index: 22;
-      will-change: transform;
-      text-shadow:0 1px 10px #0006;
+    .marquee-inner {
+      white-space:nowrap;display:flex;
     }
-    .menu-wrap { max-width: 530px; margin: 0 auto; padding: 18px 0 70px 0;}
+    .marquee-text {
+      color: var(--kfc-cyan-light);
+      font-size: 1.06em; font-weight: 600; line-height:38px;
+      white-space: nowrap;
+      will-change: transform;
+      text-shadow:0 1px 9px #182c2d7e;
+      letter-spacing: 1px;
+      padding-right: 32px;
+    }
+    .menu-wrap { max-width: 540px; margin: 0 auto; padding: 18px 0 75px 0;}
     .menu-item {
-      display: flex; 
-      background: var(--bat-card); 
-      border-radius: 18px;
-      box-shadow: 0 3px 14px #ffe02e1b, 0 0 0 1.6px #ffe02e33;
-      margin:0 12px 18px 12px; 
-      padding: 13px 12px 18px 12px; 
-      align-items: flex-start;
-      border: 1.2px solid var(--bat-gold);
-      transition:.15s;
+      display: flex; background: var(--kfc-card); border-radius: 18px;
+      box-shadow: var(--kfc-shadow);
+      margin:0 12px 18px 12px; padding: 14px 14px 19px 14px; align-items: flex-start;
+      border: 1.6px solid var(--kfc-cyan);
       position: relative;
       flex-direction: row;
-      overflow: hidden;
     }
-    .menu-item::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url('https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png') center center/85% no-repeat;
-      opacity: 0.22;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .menu-item > * { position: relative; z-index: 1; }
     .menu-img {
-      width: 68px; height: 68px; border-radius: 13px; object-fit: cover;
-      background: #252323; margin-right: 13px; border: 1.3px solid var(--bat-gold);
-      box-shadow:0 2px 10px #ffe02e3a;
+      width: 68px; height: 68px; border-radius: 15px; object-fit: cover;
+      background: #222b2c; margin-right: 15px; border: 2px solid var(--kfc-cyan-light);
+      box-shadow:0 2px 10px #12e3c83a;
       flex-shrink: 0;
-      cursor: pointer;
-      transition: box-shadow .18s;
     }
-    .menu-img:hover { box-shadow:0 4px 20px #ffe02ea0; }
     .menu-info { flex:1; min-width: 0; display:flex; flex-direction:column;}
     .menu-name {
-      font-size: 1.12em; font-weight: 700; margin-bottom: 2.5px;
-      color: var(--bat-gold); display: flex; align-items:center;
-      text-shadow: 0 2px 7px #ffe02e1a, 0 0px 1px #000;
+      font-size: 1.13em; font-weight: 800; margin-bottom: 2.5px;
+      color: var(--kfc-cyan-light); display: flex; align-items:center;
+      text-shadow: 0 2px 7px #0be8db3c;
       flex-wrap: wrap;
+      gap: 7px;
     }
     .menu-badge {
-      display: inline-block; background: linear-gradient(90deg, #ffe02e, #ffc400);
-      color: #111; border-radius: 9px; font-size: .83em; font-weight: 600;
-      padding: 2px 9px 2px 9px; margin-left: 7px; margin-right: 4px; letter-spacing: 1px;
-      box-shadow:0 1px 5px #ffe02e44;
+      display: inline-block; background: linear-gradient(90deg, var(--kfc-cyan-light), #70e5e7 75%);
+      color: #156; border-radius: 8px; font-size: .86em; font-weight: 700;
+      padding: 1.5px 9px 2.5px 9px; letter-spacing: 1px;
+      margin-left: 5px;
+      box-shadow:0 1px 5px #10f9e447;
     }
     .menu-type {
-      display:inline-block; background: #303030; color:var(--bat-gold);
-      font-size:.8em; border-radius:7px; padding:2px 8px; margin-left:6px;
-      border:1px solid #ffe02e2c;
+      display:inline-block; background: #22bbbb; color:var(--kfc-white);
+      font-size:.86em; border-radius:8px; padding:2px 8px; margin-left:7px;
+      border:1px solid #1cbfcf3b;
+      font-weight: 500;
     }
-    .menu-title { color:var(--bat-gold); font-size:.95em; margin-bottom:1px; margin-right:4px;}
-    .menu-thccbd { color:#ffe02e; font-size:0.97em; font-weight:500; margin-bottom:2px; margin-right:10px;}
-    .menu-desc { font-size:.97em; color:#f8f6c7; margin:7px 0 0 0; line-height:1.48; text-shadow:0 1px 4px #1a17084f;}
+    .menu-title { color:var(--kfc-cyan-light); font-size:.98em; margin-bottom:1px; margin-right:4px;}
+    .menu-thccbd { color:#91f2ea; font-size:0.98em; font-weight:500; margin-bottom:2px; margin-right:10px;}
+    .menu-desc { font-size:.97em; color:#e7feff; margin:8px 0 0 0; line-height:1.54;}
     .menu-bottom-prices {
-      display: flex;
-      gap: 13px;
+      display: flex; gap: 14px;
       justify-content: flex-start;
       margin-top: 17px;
       position: static;
@@ -116,134 +107,99 @@
       flex-wrap: wrap;
     }
     .menu-spec {
-      background: #2d2c22; color:var(--bat-gold); font-size:1.01em; border-radius:7px;
-      padding:2px 13px; margin-right:2px; display:inline-block; border:1.1px solid #ffe02e;
-      box-shadow:0 1px 6px #ffe02e22;
+      background: var(--kfc-cyan-dark); color: #fff; font-size:1.06em; border-radius:8px;
+      padding:3.5px 13px; display:inline-block; border:1.1px solid var(--kfc-cyan-light);
+      box-shadow:0 1px 8px #27c4c22a;
       margin-bottom:0;
       font-weight: 900;
     }
     .menu-price {
-      color: #ffe02e; font-weight: 900; font-size:1.08em; margin-left:4px;
-      text-shadow: 0 2px 7px #ffe02e1a, 0 0px 1px #000;
+      color: #fff; background:var(--kfc-cyan); margin-left:6px; border-radius:5px;
+      font-weight: 900; font-size:1.04em; padding: 0 5px;
+      box-shadow:0 2px 4px #00e7e766;
+      border: 1px solid var(--kfc-cyan-light);
+      margin-right: 1px;
     }
-    .footer { position:fixed; left:0; bottom:0; width:100vw; color:#ffc400; background:#18191b;
-      font-size:.98em; text-align:center; padding:12px 0 9px 0; z-index:22; border-top: 1.5px solid #2c2c2e;}
-    a { color: #ffe02e; text-decoration:underline; }
-    @media (max-width:700px) {
-      .menu-wrap { padding: 5px 0 63px 0;}
+    .footer { position:fixed; left:0; bottom:0; width:100vw; color:var(--kfc-cyan); background:#192525;
+      font-size:.99em; text-align:center; padding:13px 0 9px 0; z-index:22; border-top: 1.6px solid #28e4e43a;}
+    a { color: #33e3dd; text-decoration:underline; }
+    /* 右下角悬浮按钮 */
+    .float-btn {
+      position: fixed;
+      right: 23px;
+      bottom: 80px;
+      z-index: 999;
+      background: linear-gradient(90deg,#25e7e3,#17bfb9 75%);
+      color: #14595a;
+      font-size: 1.07em;
+      font-weight: 700;
+      padding: 12px 26px 11px 26px;
+      border-radius: 100px;
+      box-shadow: 0 5px 20px #12d5c451;
+      border: 0;
+      cursor: pointer;
+      outline: none;
+      transition: all .17s;
+      letter-spacing: 1px;
+      border: 2px solid #82ffff1a;
+    }
+    .float-btn:hover {
+      background: linear-gradient(90deg,#1bbfc3,#52ffef 85%);
+      color: #14595a;
+      box-shadow: 0 5px 24px #39fff451;
+      border: 2px solid #fff;
+    }
+    @media (max-width:600px) {
+      .menu-wrap { padding: 5px 0 70px 0;}
       .menu-item { margin: 0 3vw 15px 3vw; padding: 10px 5px 18px 5px;}
       .menu-img { width:54px; height:54px; margin-right:7px;}
       .menu-name { font-size: 1em;}
+      .float-btn { right:12px; bottom:70px; padding:11px 19px;}
     }
     @media (max-width:400px){
       .menu-item { flex-direction: column; align-items: stretch;}
       .menu-img { margin: 0 0 10px 0; }
       .menu-bottom-prices { justify-content: center; gap: 7px;}
     }
-    /* 图片放大弹窗 */
-    .img-modal-bg {
-      position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.75); display: none; justify-content: center; align-items: center; z-index: 9999;
-    }
-    .img-modal-bg.active { display: flex; }
-    .img-modal-bg img { max-width: 90vw; max-height: 84vh; border-radius: 16px; box-shadow: 0 2px 28px #000a; background: #111;}
-    /* 悬浮客服按钮 */
-    .contact-fab {
-      position: fixed;
-      right: 21px;
-      bottom: 26px;
-      z-index: 2000;
-      background: #ffe02e;
-      border-radius: 50%;
-      box-shadow: 0 3px 18px #0006;
-      padding: 0;
-      width: 52px;
-      height: 52px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: box-shadow .16s,transform .12s;
-      border: none;
-      text-decoration: none;
-    }
-    .contact-fab:hover {
-      box-shadow: 0 7px 28px #ffe02e55;
-      transform: scale(1.08);
-    }
-    @media (max-width: 480px){
-      .contact-fab { right: 12px; bottom: 12px; width: 44px; height: 44px;}
-      .contact-fab svg { width: 22px; height: 22px;}
-    }
   </style>
 </head>
 <body>
   <div class="header">
-    <span class="bat-logo">🦇</span> Batman1788
+    <img class="kfc-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/KFC_logo.svg" alt="KFC" />
+    KFC 420 菜单
   </div>
   <div class="marquee-wrap">
-    <div class="marquee-inner" id="marqueeInner" style="white-space:nowrap;display:flex;">
+    <div class="marquee-inner" id="marqueeInner">
       <span class="marquee-text" id="marqueeText"></span>
       <span class="marquee-text" id="marqueeTextClone"></span>
     </div>
   </div>
   <div class="menu-wrap" id="menu"></div>
+  <button class="float-btn" onclick="window.open('https://t.me/kfc420_support','_blank')">联系客服</button>
   <div class="footer">
-    Batman1788 &copy; Menu | <a href="https://t.me/batman1788" target="_blank">Telegram Order</a>
+    KFC420 &copy; Menu | <a href="https://t.me/T4H2C0_MEL" target="_blank">Telegram下单</a>
   </div>
-
-  <!-- 悬浮客服按钮 -->
-  <a href="https://t.me/batman1788" target="_blank" class="contact-fab" title="Customer Service">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" style="vertical-align:middle">
-      <circle cx="12" cy="12" r="12" fill="#ffe02e" />
-      <path d="M17 10.5c0-.83-.67-1.5-1.5-1.5h-7C7.67 9 7 9.67 7 10.5v3c0 .83.67 1.5 1.5 1.5H9v2l3-2h3.5c.83 0 1.5-.67 1.5-1.5v-3z" fill="#18191b"/>
-    </svg>
-  </a>
-
-  <!-- 图片弹窗组件 -->
-  <div class="img-modal-bg" id="imgModal" onclick="this.classList.remove('active')">
-    <img id="imgModalPic" src="" />
-  </div>
-
   <script>
-    // ---- 修改这里即可 ----
-    const SHEET_ID = "";
-    const SHEET_TAB_MENU = "";
-    const SHEET_TAB_NOTICE = "";
+    // ---- Google Sheet 配置 ----
+    const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";          // TODO: 改成你的SheetId
+    const SHEET_TAB_MENU = "batmenu";        // 菜单Tab
+    const SHEET_TAB_NOTICE = "notice";       // 公告Tab
+    // 推荐 opensheet.elk.sh
     const MENU_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_MENU}`;
     const NOTICE_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_NOTICE}`;
 
-    // 跑马灯: 第一条永远显示，第二条起每天澳洲10AM轮换
+    // 跑马灯
     fetch(NOTICE_URL)
       .then(res=>res.json())
       .then(rows=>{
         let notices = rows.map(r=>r.msg).filter(Boolean);
-        let mainMsg = notices[0] || "";
-        let others = notices.slice(1);
-
-        // 墨尔本时区每天10AM切换
-        let now = new Date();
-        let melTime = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Melbourne"}));
-        let localDate = melTime.getFullYear() * 372 + (melTime.getMonth()+1)*31 + melTime.getDate();
-        if (melTime.getHours() < 10) {
-          melTime.setDate(melTime.getDate()-1);
-          localDate = melTime.getFullYear() * 372 + (melTime.getMonth()+1)*31 + melTime.getDate();
-        }
-
-        let oneMsg = "";
-        if (others.length > 0) {
-          oneMsg = others[(localDate % others.length)];
-        }
-        let showText = mainMsg;
-        if (oneMsg) showText += "   |   " + oneMsg;
-
+        let text = notices.join("   |   ");
         const marquee = document.getElementById('marqueeText');
         const clone = document.getElementById('marqueeTextClone');
-        marquee.innerText = showText;
-        clone.innerText = showText;
-
+        marquee.innerText = text;
+        clone.innerText = text;
         const inner = document.getElementById('marqueeInner');
-        let speed = 1.2;
+        let speed = 1.3;
         let pos = 0;
         function scroll() {
           let unitWidth = marquee.offsetWidth;
@@ -255,18 +211,12 @@
         setTimeout(scroll, 350);
       });
 
-    // 放大图片函数
-    window.showImgModal = function(src){
-      document.getElementById('imgModalPic').src = src;
-      document.getElementById('imgModal').classList.add('active');
-    }
-
-    // 菜单
+    // 菜单渲染
     fetch(MENU_URL)
       .then(res=>res.json())
       .then(rows=>{
         const html = rows.map(obj=>{
-          // 多规格价钱
+          // 多规格
           let priceBtns = '';
           for(let i=1;i<=3;i++){
             if(obj['spec'+i] && obj['price'+i]){
@@ -275,10 +225,9 @@
           }
           let thccbd = obj.thccbd || '';
           if(!thccbd && (obj.thc || obj.cbd)) thccbd = (obj.thc?obj.thc:'')+(obj.cbd?(' / '+obj.cbd):'');
-
           return `
             <div class="menu-item">
-              ${obj.img ? `<img class="menu-img" src="${obj.img}" loading="lazy" onclick="showImgModal('${obj.img}')"/>` : ""}
+              ${obj.img ? `<img class="menu-img" src="${obj.img}" loading="lazy"/>` : ""}
               <div class="menu-info">
                 <div class="menu-name">
                   ${obj.name || ""}
@@ -298,7 +247,7 @@
         document.getElementById('menu').innerHTML = html || `<div style="text-align:center;color:#ccc;margin-top:40px;">暂无菜单内容</div>`;
       })
       .catch(err=>{
-        document.getElementById('menu').innerHTML = "<div style='text-align:center;color:var(--bat-gold);margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
+        document.getElementById('menu').innerHTML = "<div style='text-align:center;color:var(--kfc-cyan);margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
         console.error(err);
       });
   </script>
