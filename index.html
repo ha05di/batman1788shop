@@ -1,446 +1,182 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Batman1788 Shop</title>
+  <meta charset="UTF-8">
+  <title>Batman1788 Menu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    /* 整体背景 & 全局字体 */
+    :root {
+      --bat-black: #18191b;
+      --bat-card: #232427;
+      --bat-gold: #ffe02e;
+      --bat-yellow: #ffdf2b;
+      --bat-gray: #eee;
+    }
     body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Tahoma, "Microsoft YaHei", sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
+      margin: 0; background: var(--bat-black); color: #fff;
+      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
     }
-
-    /* 顶部导航栏 */
-    .topbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 56px;
-      background-color: #fff;
-      border-bottom: 1px solid #e0e0e0;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      z-index: 100;
+    .header {
+      padding: 28px 0 10px 0; text-align: center;
+      font-size: 2.1em; font-weight: 800; letter-spacing: 2px;
+      background: var(--bat-black);
+      color: var(--bat-gold);
+      text-shadow: 0 2px 24px #000, 0 1px 0 #fff3;
+      position: sticky; top: 0; z-index: 9;
+      border-bottom: 1.5px solid #2c2c2e;
     }
-    .hamburger {
-      font-size: 24px;
-      cursor: pointer;
-      margin-right: 16px;
+    .header .bat-logo {
+      font-size: 1.4em;
+      vertical-align: middle;
+      margin-right: 9px;
+      filter: drop-shadow(0 2px 4px #ffe02e55);
     }
-    .topbar-title {
-      font-size: 20px;
-      font-weight: bold;
+    .marquee-wrap {
+      background: #2a2927;
+      border-bottom: 1.2px solid #282828;
+      overflow: hidden; position: relative; height: 38px;
     }
-
-    /* 侧边菜单（滑出的 Drawer） */
-    .drawer {
-      position: fixed;
-      top: 0;
-      left: -240px;
-      width: 240px;
-      height: 100%;
-      background-color: #fff;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-      transition: left 0.3s ease;
-      z-index: 200;
-      padding-top: 56px; /* 留出顶栏高度 */
+    .marquee-text {
+      color: var(--bat-gold);
+      font-size: 1.03em; font-weight: 600; line-height:38px;
+      white-space: nowrap;
+      position: absolute; left:100%; top:0;
+      will-change: transform;
+      text-shadow:0 1px 10px #0006;
     }
-    .drawer.open {
-      left: 0;
+    .menu-wrap { max-width: 530px; margin: 0 auto; padding: 18px 0 70px 0;}
+    .menu-item {
+      display: flex; background: var(--bat-card); border-radius: 18px;
+      box-shadow: 0 3px 14px #ffe02e1b, 0 0 0 1.6px #ffe02e33;
+      margin:0 12px 18px 12px; padding: 13px 12px; align-items: flex-start;
+      border: 1.2px solid var(--bat-gold);
+      transition:.15s;
     }
-    .drawer ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
+    .menu-img {
+      width: 68px; height: 68px; border-radius: 13px; object-fit: cover;
+      background: #252323; margin-right: 13px; border: 1.3px solid var(--bat-gold);
+      box-shadow:0 2px 10px #ffe02e3a;
+      flex-shrink: 0;
     }
-    .drawer ul li {
-      border-bottom: 1px solid #eee;
+    .menu-info { flex:1; min-width: 0;}
+    .menu-name {
+      font-size: 1.12em; font-weight: 700; margin-bottom: 2.5px;
+      color: var(--bat-gold); display: flex; align-items:center;
+      text-shadow: 0 2px 7px #ffe02e1a, 0 0px 1px #000;
     }
-    .drawer ul li button {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      background: none;
-      text-align: left;
-      font-size: 16px;
-      cursor: pointer;
+    .menu-badge {
+      display: inline-block; background: linear-gradient(90deg, #ffe02e, #ffc400);
+      color: #111; border-radius: 9px; font-size: .83em; font-weight: 600;
+      padding: 2px 9px 2px 9px; margin-left: 7px; margin-right: 4px; letter-spacing: 1px;
+      box-shadow:0 1px 5px #ffe02e44;
     }
-    .drawer ul li button:hover {
-      background-color: #f5f5f5;
+    .menu-type {
+      display:inline-block; background: #303030; color:var(--bat-gold);
+      font-size:.8em; border-radius:7px; padding:2px 8px; margin-left:6px;
+      border:1px solid #ffe02e2c;
     }
-
-    /* 主内容区：在顶栏下方留出空间 */
-    .content {
-      margin-top: 56px;
-      padding: 16px;
+    .menu-title { color:var(--bat-gold); font-size:.95em; margin-bottom:1px; margin-right:4px;}
+    .menu-thccbd { color:#ffe02e; font-size:0.97em; font-weight:500; margin-bottom:2px; margin-right:10px;}
+    .menu-specs { margin:5px 0 0 0; display: flex; gap:11px; flex-wrap: wrap;}
+    .menu-spec { background: #2d2c22; color:var(--bat-gold); font-size:1.01em; border-radius:7px;
+      padding:2px 11px; margin-right:2px; display:inline-block;
+      border:1.1px solid #ffe02e;
+      box-shadow:0 1px 6px #ffe02e22;}
+    .menu-price { color: #ffe02e; font-weight: 800; font-size:1.08em; margin-left:4px;}
+    .menu-desc { font-size:.97em; color:#f8f6c7; margin:7px 0 0 0; line-height:1.48; text-shadow:0 1px 4px #1a17084f;}
+    .footer { position:fixed; left:0; bottom:0; width:100vw; color:#ffc400; background:#18191b;
+      font-size:.98em; text-align:center; padding:12px 0 9px 0; z-index:22; border-top: 1.5px solid #2c2c2e;}
+    a { color: #ffe02e; text-decoration:underline; }
+    @media (max-width:530px) {
+      .menu-wrap { padding: 5px 0 63px 0;}
+      .menu-item { margin: 0 3vw 15px 3vw; padding: 10px 5px;}
+      .menu-img { width:54px; height:54px; margin-right:7px;}
+      .menu-name { font-size: 1em;}
     }
-
-    /* 商品列表容器 */
-    .product-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-    }
-
-    /* 单个商品卡片 */
-    .product-card {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      width: calc(50% - 16px); /* 手机上两列布局；桌面会自动伸展 */
-      max-width: 300px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* 商品图片 */
-    .product-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* 徽章（Badge）：放在图片的右上角 */
-    .badge {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background-color: #e53935; /* 红色背景 */
-      color: #fff;
-      font-size: 12px;
-      font-weight: bold;
-      padding: 4px 8px;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .badge.new {
-      background-color: #43a047; /* 绿色背景 */
-    }
-    .badge.hot {
-      background-color: #e53935; /* 红色背景 */
-    }
-
-    /* 商品信息区 */
-    .product-info {
-      padding: 12px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .product-title {
-      font-size: 18px;
-      margin: 0 0 8px 0;
-    }
-    .product-specs {
-      margin-bottom: 8px;
-    }
-    .spec-item {
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-    }
-    .spec-item label {
-      flex: 1;
-    }
-    .spec-item select,
-    .spec-item input[type="number"] {
-      flex: 1;
-      padding: 4px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    /* 单价显示 */
-    .product-price {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      text-align: right;
-      color: #e53935;
-    }
-
-    /* 下单按钮 */
-    .btn-order {
-      background-color: #1e88e5;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
-      transition: background-color 0.2s ease;
-    }
-    .btn-order:hover {
-      background-color: #1565c0;
-    }
-
-    /* 响应式：大屏时一行最多放 3 张 */
-    @media (min-width: 768px) {
-      .product-card {
-        width: calc(33.333% - 16px);
-      }
+    @media (max-width:400px){
+      .menu-item { flex-direction: column; align-items: stretch;}
+      .menu-img { margin: 0 0 10px 0; }
     }
   </style>
 </head>
 <body>
-  <!-- 顶栏：含汉堡图标和标题 -->
-  <div class="topbar">
-    <div class="hamburger" id="hamburgerBtn">&#9776;</div>
-    <div class="topbar-title">Batman1788 Shop</div>
+  <div class="header">
+    <span class="bat-logo">🦇</span> Batman1788
   </div>
-
-  <!-- 侧边菜单（Drawer） -->
-  <div class="drawer" id="drawerMenu">
-    <ul>
-      <li><button onclick="onDrawerClose()">关闭菜单</button></li>
-      <li><button onclick="onLogout()">退出</button></li>
-      <!-- 你可以根据需要继续添加其他菜单项 -->
-    </ul>
+  <div class="marquee-wrap"><span class="marquee-text" id="marqueeText"></span></div>
+  <div class="menu-wrap" id="menu"></div>
+  <div class="footer">
+    Batman1788 &copy; Menu | <a href="https://t.me/batman1788" target="_blank">Telegram下单</a>
   </div>
-
-  <!-- 主内容 -->
-  <div class="content">
-    <div class="product-list" id="productList">
-      <!-- 示例商品卡片：静态写死。实际可改成动态从 Google Sheets 拉数据渲染 -->
-      <!-- 商品 1 -->
-      <div class="product-card" data-id="p001">
-        <img src="https://via.placeholder.com/300x200?text=冰咖啡" alt="冰咖啡">
-        <!-- 徽章：热销 -->
-        <div class="badge hot">Hot Sale</div>
-        <div class="product-info">
-          <h3 class="product-title">冰咖啡</h3>
-          <div class="product-specs">
-            <div class="spec-item">
-              <label for="size_p001">规格：</label>
-              <select id="size_p001">
-                <option value="small" data-price="25">小杯 25元</option>
-                <option value="medium" data-price="35">中杯 35元</option>
-                <option value="large" data-price="45">大杯 45元</option>
-              </select>
-            </div>
-            <div class="spec-item">
-              <label for="qty_p001">数量：</label>
-              <input type="number" id="qty_p001" min="1" value="1" />
-            </div>
-          </div>
-          <div class="product-price" id="price_p001">¥25</div>
-          <button class="btn-order" onclick="addToCart('p001')">加入购物车</button>
-        </div>
-      </div>
-
-      <!-- 商品 2 -->
-      <div class="product-card" data-id="p002">
-        <img src="https://via.placeholder.com/300x200?text=拿铁" alt="拿铁">
-        <!-- 徽章：新品 -->
-        <div class="badge new">New</div>
-        <div class="product-info">
-          <h3 class="product-title">香草拿铁</h3>
-          <div class="product-specs">
-            <div class="spec-item">
-              <label for="size_p002">规格：</label>
-              <select id="size_p002">
-                <option value="small" data-price="30">小杯 30元</option>
-                <option value="medium" data-price="40">中杯 40元</option>
-                <option value="large" data-price="50">大杯 50元</option>
-              </select>
-            </div>
-            <div class="spec-item">
-              <label for="qty_p002">数量：</label>
-              <input type="number" id="qty_p002" min="1" value="1" />
-            </div>
-          </div>
-          <div class="product-price" id="price_p002">¥30</div>
-          <button class="btn-order" onclick="addToCart('p002')">加入购物车</button>
-        </div>
-      </div>
-
-      <!-- 商品 3 -->
-      <div class="product-card" data-id="p003">
-        <img src="https://via.placeholder.com/300x200?text=抹茶拿铁" alt="抹茶拿铁">
-        <!-- 徽章：无标签 -->
-        <div class="product-info">
-          <h3 class="product-title">抹茶拿铁</h3>
-          <div class="product-specs">
-            <div class="spec-item">
-              <label for="size_p003">规格：</label>
-              <select id="size_p003">
-                <option value="small" data-price="28">小杯 28元</option>
-                <option value="medium" data-price="38">中杯 38元</option>
-                <option value="large" data-price="48">大杯 48元</option>
-              </select>
-            </div>
-            <div class="spec-item">
-              <label for="qty_p003">数量：</label>
-              <input type="number" id="qty_p003" min="1" value="1" />
-            </div>
-          </div>
-          <div class="product-price" id="price_p003">¥28</div>
-          <button class="btn-order" onclick="addToCart('p003')">加入购物车</button>
-        </div>
-      </div>
-
-      <!-- 你可以按需复制上面结构，继续添加更多商品卡片 -->
-    </div>
-
-    <!-- 底部：购物车预览 + “提交订单” -->
-    <div id="cartSummary" style="margin-top: 32px; padding: 16px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-      <h3>购物车：</h3>
-      <ul id="cartList" style="padding-left: 16px;"></ul>
-      <div style="text-align: right; margin-top: 8px;">
-        <strong>总计：<span id="cartTotal">¥0</span></strong>
-      </div>
-      <button class="btn-order" style="margin-top: 12px; width: 100%;" onclick="submitOrder()">提交订单</button>
-    </div>
-  </div>
-
   <script>
-    // ============================
-    // 抽屉式侧边栏逻辑
-    // ============================
-    const hamburgerBtn = document.getElementById("hamburgerBtn");
-    const drawerMenu   = document.getElementById("drawerMenu");
+    // ---- 修改这里即可 ----
+    const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";
+    const SHEET_TAB_MENU = "batmenu";
+    const SHEET_TAB_NOTICE = "notice";
+    // 推荐用 opensheet.elk.sh，不用API Key
+    const MENU_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_MENU}`;
+    const NOTICE_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_NOTICE}`;
 
-    hamburgerBtn.addEventListener("click", () => {
-      drawerMenu.classList.toggle("open");
-    });
-
-    function onDrawerClose() {
-      drawerMenu.classList.remove("open");
-    }
-
-    function onLogout() {
-      // 如果想实现“退出登录”或跳到其它页面，可以在这里写
-      alert("这里可以实现退出逻辑");
-      drawerMenu.classList.remove("open");
-    }
-
-    // ============================
-    // 购物车数据结构
-    // ============================
-    let cart = {}; // { 商品ID: { name, size, price, qty, subtotal } }
-
-    // 更新某个商品卡片上的价格显示
-    function updateProductPrice(productId) {
-      const selectEl = document.getElementById(`size_${productId}`);
-      const priceDisplay = document.getElementById(`price_${productId}`);
-      const selectedOption = selectEl.options[selectEl.selectedIndex];
-      const unitPrice = parseInt(selectedOption.dataset.price, 10);
-      priceDisplay.innerText = `¥${unitPrice}`;
-    }
-
-    // 初始化：给每个 <select> 绑定 change 事件，用来更新单价显示
-    document.querySelectorAll("select[id^='size_']").forEach(selectEl => {
-      const pid = selectEl.id.replace("size_", "");
-      selectEl.addEventListener("change", () => updateProductPrice(pid));
-      // 页面加载时先更新一次
-      updateProductPrice(pid);
-    });
-
-    // 把商品加入购物车
-    function addToCart(productId) {
-      const titleEl = document.querySelector(`.product-card[data-id="${productId}"] .product-title`);
-      const name = titleEl ? titleEl.innerText : "未知商品";
-      const selectEl = document.getElementById(`size_${productId}`);
-      const qtyEl = document.getElementById(`qty_${productId}`);
-
-      const size = selectEl.value;
-      const unitPrice = parseInt(selectEl.options[selectEl.selectedIndex].dataset.price, 10);
-      const qty = parseInt(qtyEl.value, 10) || 1;
-      const subtotal = unitPrice * qty;
-
-      // 放到 cart 对象里
-      cart[productId] = { name, size, price: unitPrice, qty, subtotal };
-      renderCart();
-    }
-
-    // 渲染购物车列表与总价
-    function renderCart() {
-      const cartList = document.getElementById("cartList");
-      const cartTotalEl = document.getElementById("cartTotal");
-      cartList.innerHTML = ""; // 先清空
-      let total = 0;
-
-      Object.keys(cart).forEach(pid => {
-        const item = cart[pid];
-        total += item.subtotal;
-        const li = document.createElement("li");
-        li.innerText = `${item.name}（${item.size}） x ${item.qty}  → 小计 ¥${item.subtotal}`;
-        cartList.appendChild(li);
+    // 跑马灯
+    fetch(NOTICE_URL)
+      .then(res=>res.json())
+      .then(rows=>{
+        // rows 格式: [{msg: "内容1"}, {msg:"内容2"}, ...]
+        let notices = rows.map(r=>r.msg).filter(Boolean);
+        let text = notices.join("   |   ");
+        const marquee = document.getElementById('marqueeText');
+        marquee.innerText = text;
+        // 跑马灯动画
+        let pos = marquee.parentNode.offsetWidth;
+        function scroll() {
+          pos -= 1.2;
+          if(pos < -marquee.offsetWidth) pos = marquee.parentNode.offsetWidth;
+          marquee.style.transform = `translateX(${pos}px)`;
+          requestAnimationFrame(scroll);
+        }
+        setTimeout(scroll, 350);
       });
 
-      cartTotalEl.innerText = `¥${total}`;
-    }
-
-    // ============================
-    // 提交订单：调用 Telegram WebApp.sendData()
-    // ============================
-    function submitOrder() {
-      if (Object.keys(cart).length === 0) {
-        alert("购物车为空，请先添加商品");
-        return;
-      }
-
-      // 先把用户在 WebApp 中当前的用户信息通过 Telegram.WebApp.initDataUnsafe 拿到
-      const tg = window.Telegram ? window.Telegram.WebApp : null;
-      let tgUser = null;
-      if (tg) {
-        tgUser = tg.initDataUnsafe ? tg.initDataUnsafe.user : null;
-      }
-
-      // 组装订单数据
-      const orderData = {
-        user: {
-          id: tgUser ? tgUser.id : null,
-          first_name: tgUser ? tgUser.first_name : null,
-          username: tgUser ? tgUser.username : null,
-          language_code: tgUser ? tgUser.language_code : null
-        },
-        items: Object.keys(cart).map(pid => {
-          const it = cart[pid];
-          return {
-            product_id: pid,
-            name: it.name,
-            size: it.size,
-            unit_price: it.price,
-            quantity: it.qty,
-            subtotal: it.subtotal
-          };
-        }),
-        total: Object.values(cart).reduce((sum, it) => sum + it.subtotal, 0),
-        timestamp: new Date().toISOString()
-      };
-
-      // 把订单数据以 JSON 字符串形式通过 Telegram WebApp 接口发回 Bot
-      if (tg && typeof tg.sendData === "function") {
-        tg.sendData(JSON.stringify(orderData));
-      } else {
-        // 如果不是从 Telegram WebApp 打开，这里先本地打印一下
-        console.log("模拟发送到 Bot 的订单：", orderData);
-        alert("订单已提交（模拟显示），实际需在 Telegram 中打开 WebApp 才能发给 Bot");
-      }
-    }
-
-    // ============================
-    // 页面加载完毕时，告诉 Telegram WebApp “准备好”了
-    // ============================
-    window.addEventListener("DOMContentLoaded", function() {
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.ready();
-      }
-    });
+    // 菜单
+    fetch(MENU_URL)
+      .then(res=>res.json())
+      .then(rows=>{
+        const html = rows.map(obj=>{
+          // 多规格
+          let specs = '';
+          for(let i=1;i<=3;i++){
+            if(obj['spec'+i] && obj['price'+i]){
+              specs += `<span class="menu-spec">${obj['spec'+i]}<span class="menu-price">${obj['price'+i]}</span></span>`;
+            }
+          }
+          // THC/CBD合成
+          let thccbd = obj.thccbd || '';
+          if(!thccbd && (obj.thc || obj.cbd)) thccbd = (obj.thc?obj.thc:'')+(obj.cbd?(' / '+obj.cbd):'');
+          return `
+            <div class="menu-item">
+              ${obj.img ? `<img class="menu-img" src="${obj.img}" loading="lazy"/>` : ""}
+              <div class="menu-info">
+                <div class="menu-name">
+                  ${obj.name || ""}
+                  ${obj.badge ? `<span class="menu-badge">${obj.badge}</span>` : ""}
+                  ${obj.type ? `<span class="menu-type">${obj.type}</span>` : ""}
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:2px;">
+                  ${obj.title ? `<span class="menu-title">${obj.title}</span>` : ""}
+                  ${thccbd ? `<span class="menu-thccbd">THC/CBD: ${thccbd}</span>` : ""}
+                </div>
+                <div class="menu-specs">${specs}</div>
+                ${obj.desc ? `<div class="menu-desc">${obj.desc}</div>` : ""}
+              </div>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('menu').innerHTML = html || `<div style="text-align:center;color:#ccc;margin-top:40px;">暂无菜单内容</div>`;
+      })
+      .catch(err=>{
+        document.getElementById('menu').innerHTML = "<div style='text-align:center;color:var(--bat-gold);margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
+        console.error(err);
+      });
   </script>
 </body>
 </html>
