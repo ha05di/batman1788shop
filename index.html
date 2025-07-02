@@ -60,7 +60,20 @@
       transition:.15s;
       position: relative;
       flex-direction: row;
+      overflow: hidden; /* 关键，加上这个 */
     }
+    /* LOGO 水印背景 */
+    .menu-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png') center center/88% no-repeat;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .menu-item > * { position: relative; z-index: 1; }
+
     .menu-img {
       width: 68px; height: 68px; border-radius: 13px; object-fit: cover;
       background: #252323; margin-right: 13px; border: 1.3px solid var(--bat-gold);
