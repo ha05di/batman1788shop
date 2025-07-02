@@ -2,122 +2,121 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>Menu Demo</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Menu Card 新布局</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <style>
-    body { background: #181b1e; color: #fff; margin:0; font-family: 'Segoe UI','PingFang SC','Microsoft YaHei',Arial,sans-serif;}
-    .menu-wrap { max-width: 520px; margin: 0 auto; padding: 24px 0 65px 0; }
+    body { background: #182223; color: #fff; margin: 0; font-family: 'Segoe UI','PingFang SC','Microsoft YaHei',Arial,sans-serif;}
+    .menu-wrap { max-width: 540px; margin: 0 auto; padding: 24px 0 70px 0;}
     .menu-item {
-      background: #232427dd;
-      border-radius: 16px;
-      margin: 0 11px 18px 11px;
-      box-shadow: 0 2px 14px #0003;
-      padding: 13px 10px 17px 10px;
-      display: flex;
-      gap: 15px;
-      align-items: flex-start;
+      display: flex; background: #232c2aef; border-radius: 15px;
+      box-shadow: 0 3px 18px #1bc7a120;
+      margin:0 12px 19px 12px; padding:14px 14px 18px 14px; gap: 0 16px;
+      border: 1.3px solid #00e7ca3a;
+      min-height: 140px;
+      position: relative;
+      flex-wrap: wrap;
     }
     .menu-img {
-      width: 86px; height: 86px; border-radius: 13px; object-fit: cover; background: #222;
-      border: 2px solid #282d2c; box-shadow: 0 1px 7px #0003;
+      width: 82px; height: 82px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: #1a2222;
+      border: 2px solid #5ff5e0;
       flex-shrink: 0;
+      margin-right: 0;
+      box-shadow: 0 2px 8px #0003;
+      display: block;
     }
-    .menu-info-box {
-      flex: 1; min-width:0; display: flex; flex-direction: column; gap: 6px;
+    .menu-info-group {
+      flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; gap: 0;
     }
     .menu-row-top {
-      display: flex; gap: 12px; align-items: center; margin-bottom:2px;
-    }
-    .menu-badge {
-      display: inline-block; background: #ffe477; color: #856100; font-size:.87em; font-weight: 600;
-      border-radius: 8px; padding:2.5px 9px 2px 9px;
+      display: flex; align-items: center; gap: 7px; margin-bottom: 3px;
     }
     .menu-name {
-      font-size: 1.12em; font-weight: bold; letter-spacing:1px; color:#fff;
-      overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 110px;
+      font-size: 1.08em; font-weight: bold; color: #fff;
+      max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .menu-row-mid {
-      display: flex; gap: 18px; align-items: center; margin-bottom: 3px;
+    .menu-badge {
+      background: #ffe477; color: #856100; font-size: .83em; border-radius: 8px; padding: 1.5px 7px; font-weight:600;
     }
     .menu-type {
-      background: #1bc7a1; color:#154; font-size: .88em; border-radius: 8px; padding: 1.5px 9px 2px 9px;
-      font-weight:500;
+      background: #17e5c2; color: #133; font-size: .82em; border-radius: 7px; padding: 1px 7px;
     }
     .menu-thccbd {
-      color: #a6f8ef; font-size: .97em; font-weight: 600;
+      color: #6ff7ee; font-size: .96em; margin-left: 8px;
     }
     .menu-desc {
-      margin: 6px 0 7px 0; font-size: 1.03em; color: #e7e7e7; line-height: 1.53;
-      background: #252a26b8; border-radius: 8px; padding: 10px 11px; min-height: 58px;
-      font-weight: 400;
+      font-size: .99em; color: #d7eeeb; line-height: 1.44; margin-bottom: 6px;
+      overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
     }
-    .menu-specs {
-      display: flex; gap: 12px; margin-top: 10px;
+    .menu-prices-row {
+      width: 100%; display: flex; gap: 12px;
+      justify-content: flex-start; margin-top: 0;
+      margin-left: calc(82px + 16px); /* align with info */
     }
-    .menu-spec {
-      background: #1c4c51; color: #9fffcf; border-radius: 8px; padding: 6px 18px;
-      font-size: 1.02em; font-weight: 700; min-width:68px; text-align:center;
-      box-shadow: 0 1px 5px #38ec8c17;
+    .menu-price-btn {
+      flex: 1 1 0; min-width: 84px; background: #08dbc0dd;
+      color: #1a2523; border-radius: 8px; font-size: 1.07em; font-weight: 600;
+      border: none; outline: none; padding: 7px 0 6px 0; margin:0;
+      box-shadow: 0 1px 7px #00e3b922;
+      cursor: pointer;
+      transition: background .13s;
+      letter-spacing: .5px;
+      text-align: center;
+      user-select: none;
     }
-    .menu-price {
-      margin-left: 7px; color: #ffe477; font-weight: bold;
+    .menu-price-btn:not(:empty):hover { background: #4ff7e4; }
+    @media (max-width: 600px) {
+      .menu-wrap { padding: 10px 0 64px 0;}
+      .menu-item { padding: 10px 7px 16px 7px; gap:0 9px;}
+      .menu-img { width: 62px; height: 62px;}
+      .menu-row-top .menu-name { max-width: 70px;}
+      .menu-prices-row { margin-left: calc(62px + 9px);}
+      .menu-price-btn { min-width: 65px; font-size: .99em;}
     }
-    @media (max-width:600px) {
-      .menu-wrap { padding:10px 0 63px 0;}
-      .menu-item { margin:0 2vw 15px 2vw; padding:7px 6px 14px 6px;}
-      .menu-img { width:64px; height:64px;}
-      .menu-name { font-size:.99em; max-width:60px;}
-      .menu-badge { font-size:.80em;}
-      .menu-desc { font-size:.97em; padding:7px 7px;}
-      .menu-spec { padding:4px 10px; font-size:.96em; }
+    @media (max-width:400px){
+      .menu-prices-row { gap:7px;}
     }
   </style>
 </head>
 <body>
   <div class="menu-wrap" id="menu"></div>
   <script>
-    // 修改为你的Sheet
+    // 替换为你的 Sheet ID 和 tab
     const SHEET_ID = "1_vY7Cu22ZjBjTH8aS9Fze3_TN7HCkHUm012YtSZWrys";
     const SHEET_TAB = "beanmenu";
     const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB}`;
 
     fetch(SHEET_URL)
-      .then(res => res.json())
-      .then(rows => {
-        const html = rows.map(obj => {
-          // 多规格 price
-          let specs = '';
-          for(let i=1;i<=3;i++) {
-            if(obj['spec'+i] && obj['price'+i]) {
-              specs += `<span class="menu-spec">${obj['spec'+i]}<span class="menu-price">${obj['price'+i]}</span></span>`;
-            }
-          }
-          // thccbd 合成
-          let thccbd = obj.thccbd || '';
-          if(!thccbd && (obj.thc || obj.cbd)) {
-            thccbd = (obj.thc ? obj.thc : '') + (obj.cbd ? (' / ' + obj.cbd) : '');
-          }
+      .then(res=>res.json())
+      .then(rows=>{
+        const html = rows.map(obj=>{
           return `
             <div class="menu-item">
-              <img class="menu-img" src="${obj.img||''}" loading="lazy"/>
-              <div class="menu-info-box">
+              <img class="menu-img" src="${obj.img||''}" alt="" loading="lazy"/>
+              <div class="menu-info-group">
                 <div class="menu-row-top">
                   ${obj.badge ? `<span class="menu-badge">${obj.badge}</span>` : ""}
-                  <span class="menu-name">${obj.name||''}</span>
-                </div>
-                <div class="menu-row-mid">
+                  ${obj.name ? `<span class="menu-name">${obj.name}</span>` : ""}
                   ${obj.type ? `<span class="menu-type">${obj.type}</span>` : ""}
-                  ${thccbd ? `<span class="menu-thccbd">${thccbd}</span>` : ""}
                 </div>
-                <div class="menu-desc">${obj.desc||''}</div>
-                <div class="menu-specs">${specs}</div>
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:2px;">
+                  ${obj.thccbd ? `<span class="menu-thccbd">${obj.thccbd}</span>` : ""}
+                </div>
+                ${obj.desc ? `<div class="menu-desc">${obj.desc}</div>` : ""}
+              </div>
+              <div class="menu-prices-row">
+                ${obj.spec1&&obj.price1?`<span class="menu-price-btn">${obj.spec1} ${obj.price1}</span>`:""}
+                ${obj.spec2&&obj.price2?`<span class="menu-price-btn">${obj.spec2} ${obj.price2}</span>`:""}
+                ${obj.spec3&&obj.price3?`<span class="menu-price-btn">${obj.spec3} ${obj.price3}</span>`:""}
               </div>
             </div>
           `;
         }).join('');
         document.getElementById('menu').innerHTML = html || `<div style="text-align:center;color:#ccc;margin-top:40px;">暂无菜单内容</div>`;
       })
-      .catch(err => {
+      .catch(err=>{
         document.getElementById('menu').innerHTML = "<div style='text-align:center;color:#fff;margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
         console.error(err);
       });
