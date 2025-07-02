@@ -71,7 +71,7 @@
       position: absolute;
       inset: 0;
       background: url('https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png') center center/85% no-repeat;
-      opacity: 0.20;
+      opacity: 0.22;
       pointer-events: none;
       z-index: 0;
     }
@@ -179,7 +179,7 @@
 </head>
 <body>
   <div class="header">
-    <span class="bat-logo"></span> Batman1788 Menu
+    <span class="bat-logo">🦇</span> Batman1788
   </div>
   <div class="marquee-wrap">
     <div class="marquee-inner" id="marqueeInner" style="white-space:nowrap;display:flex;">
@@ -193,7 +193,7 @@
   </div>
 
   <!-- 悬浮客服按钮 -->
-  <a href="https://t.me/batman1788" target="_blank" class="contact-fab" title="联系客服">
+  <a href="https://t.me/batman1788" target="_blank" class="contact-fab" title="Customer Service">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" style="vertical-align:middle">
       <circle cx="12" cy="12" r="12" fill="#ffe02e" />
       <path d="M17 10.5c0-.83-.67-1.5-1.5-1.5h-7C7.67 9 7 9.67 7 10.5v3c0 .83.67 1.5 1.5 1.5H9v2l3-2h3.5c.83 0 1.5-.67 1.5-1.5v-3z" fill="#18191b"/>
@@ -210,25 +210,41 @@
     const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";
     const SHEET_TAB_MENU = "batmenu";
     const SHEET_TAB_NOTICE = "notice";
-    // 推荐用 opensheet.elk.sh，不用API Key
     const MENU_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_MENU}`;
     const NOTICE_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_NOTICE}`;
 
-    // 跑马灯
+    // 跑马灯: 第一条永远显示，第二条起每天澳洲10AM轮换
     fetch(NOTICE_URL)
       .then(res=>res.json())
       .then(rows=>{
         let notices = rows.map(r=>r.msg).filter(Boolean);
-        let text = notices.join("   |   ");
+        let mainMsg = notices[0] || "";
+        let others = notices.slice(1);
+
+        // 墨尔本时区每天10AM切换
+        let now = new Date();
+        let melTime = new Date(now.toLocaleString("en-US", {timeZone: "Australia/Melbourne"}));
+        let localDate = melTime.getFullYear() * 372 + (melTime.getMonth()+1)*31 + melTime.getDate();
+        if (melTime.getHours() < 10) {
+          melTime.setDate(melTime.getDate()-1);
+          localDate = melTime.getFullYear() * 372 + (melTime.getMonth()+1)*31 + melTime.getDate();
+        }
+
+        let oneMsg = "";
+        if (others.length > 0) {
+          oneMsg = others[(localDate % others.length)];
+        }
+        let showText = mainMsg;
+        if (oneMsg) showText += "   |   " + oneMsg;
+
         const marquee = document.getElementById('marqueeText');
         const clone = document.getElementById('marqueeTextClone');
-        marquee.innerText = text;
-        clone.innerText = text;
+        marquee.innerText = showText;
+        clone.innerText = showText;
 
         const inner = document.getElementById('marqueeInner');
         let speed = 1.2;
         let pos = 0;
-
         function scroll() {
           let unitWidth = marquee.offsetWidth;
           pos -= speed;
