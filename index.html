@@ -2,171 +2,170 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>KFC 420 Menu</title>
+  <title>KFC THC 绿白菜单</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
-      --kfc-cyan: #27c4c2;
-      --kfc-cyan-dark: #169ca4;
-      --kfc-cyan-light: #78eceb;
-      --kfc-card: #1a2224;
+      --kfc-green: #18a651;
+      --kfc-green-dark: #12903f;
+      --kfc-green-light: #24e37b;
       --kfc-white: #fff;
-      --kfc-gray: #ecf9f9;
-      --kfc-shadow: 0 3px 20px #27c4c221, 0 1px 0 #28e4e41a;
+      --kfc-gray: #f4fff8;
+      --kfc-card: #f4fff8;
+      --kfc-shadow: 0 3px 22px #18a65125, 0 1px 0 #12893118;
     }
     body {
-      margin: 0; background: #182224; color: var(--kfc-white);
+      margin: 0; background: var(--kfc-green); color: var(--kfc-green-dark);
       font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
     }
     .header {
-      padding: 14px 0 6px 0;
+      padding: 15px 0 7px 0;
       text-align: center;
-      font-size: 1.25em;
-      font-weight: 800;
+      font-size: 1.35em;
+      font-weight: 900;
       letter-spacing: 2px;
-      background: #182224;
-      color: var(--kfc-cyan-light);
-      border-bottom: 1.5px solid #2c3e3e;
+      background: var(--kfc-green);
+      color: var(--kfc-white);
+      border-bottom: 2px solid #16c85b;
       position: sticky; top: 0; z-index: 11;
-      box-shadow: 0 1px 16px #1bc1be1a;
+      box-shadow: 0 1px 18px #1fdc7e18;
     }
     .header .kfc-logo {
-      height: 32px;
+      height: 36px; width: 36px;
       vertical-align: middle;
-      margin-right: 9px;
+      margin-right: 12px;
       border-radius: 8px;
-      box-shadow: 0 1px 7px #0bd5e044;
+      box-shadow: 0 2px 7px #7cffb245;
       background: #fff;
+      object-fit: cover;
     }
     .marquee-wrap {
-      background: #182c2d;
-      border-bottom: 1.2px solid #28e4e426;
+      background: #fff;
+      border-bottom: 2px solid #18a65115;
       overflow: hidden;
       position: sticky;
       top: 0;
       z-index: 10;
-      height: 38px;
+      height: 39px;
     }
-    .marquee-inner {
-      white-space:nowrap;display:flex;
-    }
+    .marquee-inner { white-space:nowrap; display:flex; }
     .marquee-text {
-      color: var(--kfc-cyan-light);
-      font-size: 1.06em; font-weight: 600; line-height:38px;
+      color: #0e8842;
+      font-size: 1.08em; font-weight: 700; line-height:39px;
       white-space: nowrap;
       will-change: transform;
-      text-shadow:0 1px 9px #182c2d7e;
-      letter-spacing: 1px;
-      padding-right: 32px;
+      text-shadow:0 1px 11px #17be4577;
+      letter-spacing: 1.5px;
+      padding-right: 34px;
     }
-    .menu-wrap { max-width: 540px; margin: 0 auto; padding: 18px 0 75px 0;}
+    .menu-wrap { max-width: 570px; margin: 0 auto; padding: 22px 0 75px 0;}
     .menu-item {
-      display: flex; background: var(--kfc-card); border-radius: 18px;
+      display: flex; background: var(--kfc-card); border-radius: 20px;
       box-shadow: var(--kfc-shadow);
-      margin:0 12px 18px 12px; padding: 14px 14px 19px 14px; align-items: flex-start;
-      border: 1.6px solid var(--kfc-cyan);
+      margin:0 13px 21px 13px; padding: 15px 16px 22px 16px; align-items: flex-start;
+      border: 2px solid var(--kfc-green);
       position: relative;
       flex-direction: row;
     }
     .menu-img {
-      width: 68px; height: 68px; border-radius: 15px; object-fit: cover;
-      background: #222b2c; margin-right: 15px; border: 2px solid var(--kfc-cyan-light);
-      box-shadow:0 2px 10px #12e3c83a;
+      width: 75px; height: 75px; border-radius: 18px; object-fit: cover;
+      background: #fff; margin-right: 19px; border: 2.3px solid var(--kfc-green);
+      box-shadow:0 2px 14px #16c85b36;
       flex-shrink: 0;
     }
     .menu-info { flex:1; min-width: 0; display:flex; flex-direction:column;}
     .menu-name {
-      font-size: 1.13em; font-weight: 800; margin-bottom: 2.5px;
-      color: var(--kfc-cyan-light); display: flex; align-items:center;
-      text-shadow: 0 2px 7px #0be8db3c;
-      flex-wrap: wrap;
-      gap: 7px;
+      font-size: 1.16em; font-weight: 900; margin-bottom: 2.5px;
+      color: #18a651; display: flex; align-items:center;
+      text-shadow: 0 2px 8px #18a65118;
+      flex-wrap: wrap; gap: 7px;
     }
     .menu-badge {
-      display: inline-block; background: linear-gradient(90deg, var(--kfc-cyan-light), #70e5e7 75%);
-      color: #156; border-radius: 8px; font-size: .86em; font-weight: 700;
-      padding: 1.5px 9px 2.5px 9px; letter-spacing: 1px;
-      margin-left: 5px;
-      box-shadow:0 1px 5px #10f9e447;
+      display: inline-block; background: linear-gradient(90deg, #39ef8e, #eaffeb 70%);
+      color: #187542; border-radius: 10px; font-size: .86em; font-weight: 800;
+      padding: 2px 12px 3px 12px; letter-spacing: 1.2px;
+      margin-left: 7px;
+      box-shadow:0 2px 6px #41ff9651;
+      border: 1.5px solid #13b85b11;
     }
     .menu-type {
-      display:inline-block; background: #22bbbb; color:var(--kfc-white);
-      font-size:.86em; border-radius:8px; padding:2px 8px; margin-left:7px;
-      border:1px solid #1cbfcf3b;
-      font-weight: 500;
+      display:inline-block; background: #ebfff5; color:#16a651;
+      font-size:.86em; border-radius:8px; padding:2px 10px; margin-left:7px;
+      border:1.1px solid #19d46728;
+      font-weight: 600;
     }
-    .menu-title { color:var(--kfc-cyan-light); font-size:.98em; margin-bottom:1px; margin-right:4px;}
-    .menu-thccbd { color:#91f2ea; font-size:0.98em; font-weight:500; margin-bottom:2px; margin-right:10px;}
-    .menu-desc { font-size:.97em; color:#e7feff; margin:8px 0 0 0; line-height:1.54;}
+    .menu-title { color:#18a651; font-size:1.04em; margin-bottom:2px; margin-right:7px; font-weight: 600;}
+    .menu-thccbd { color:#18a651; font-size:0.97em; font-weight:600; margin-bottom:2px; margin-right:12px;}
+    .menu-desc { font-size:1.02em; color:#154b27; margin:10px 0 0 0; line-height:1.56;}
     .menu-bottom-prices {
       display: flex; gap: 14px;
       justify-content: flex-start;
-      margin-top: 17px;
+      margin-top: 20px;
       position: static;
       padding: 0 4px 0 4px;
       flex-wrap: wrap;
     }
     .menu-spec {
-      background: var(--kfc-cyan-dark); color: #fff; font-size:1.06em; border-radius:8px;
-      padding:3.5px 13px; display:inline-block; border:1.1px solid var(--kfc-cyan-light);
-      box-shadow:0 1px 8px #27c4c22a;
+      background: #dffae7; color: #13793a; font-size:1.09em; border-radius:11px;
+      padding:4.5px 14px; display:inline-block; border:2px solid #18a651;
+      box-shadow:0 2px 9px #18a65115;
       margin-bottom:0;
       font-weight: 900;
+      margin-right: 2px;
     }
     .menu-price {
-      color: #fff; background:var(--kfc-cyan); margin-left:6px; border-radius:5px;
-      font-weight: 900; font-size:1.04em; padding: 0 5px;
-      box-shadow:0 2px 4px #00e7e766;
-      border: 1px solid var(--kfc-cyan-light);
-      margin-right: 1px;
+      color: #fff; background: #18a651; margin-left:7px; border-radius:6px;
+      font-weight: 900; font-size:1.11em; padding: 1px 8px;
+      box-shadow:0 1.5px 5px #25cf7c29;
+      border: 1.5px solid #18a651;
+      margin-right: 2px;
     }
-    .footer { position:fixed; left:0; bottom:0; width:100vw; color:var(--kfc-cyan); background:#192525;
-      font-size:.99em; text-align:center; padding:13px 0 9px 0; z-index:22; border-top: 1.6px solid #28e4e43a;}
-    a { color: #33e3dd; text-decoration:underline; }
-    /* 右下角悬浮按钮 */
+    .footer { position:fixed; left:0; bottom:0; width:100vw; color:#fff; background:#18a651;
+      font-size:1.06em; text-align:center; padding:13px 0 9px 0; z-index:22; border-top: 2px solid #eaffeb;}
+    a { color: #12903f; text-decoration:underline; font-weight: 800;}
     .float-btn {
       position: fixed;
       right: 23px;
       bottom: 80px;
       z-index: 999;
-      background: linear-gradient(90deg,#25e7e3,#17bfb9 75%);
-      color: #14595a;
-      font-size: 1.07em;
+      background: linear-gradient(90deg,#2cdd8f,#19a651 75%);
+      color: #fff;
+      font-size: 1.09em;
       font-weight: 700;
-      padding: 12px 26px 11px 26px;
+      padding: 13px 28px 12px 28px;
       border-radius: 100px;
-      box-shadow: 0 5px 20px #12d5c451;
+      box-shadow: 0 8px 32px #16c85b28;
       border: 0;
       cursor: pointer;
       outline: none;
+      border: 2px solid #dffae7;
+      letter-spacing: 1.5px;
       transition: all .17s;
-      letter-spacing: 1px;
-      border: 2px solid #82ffff1a;
     }
     .float-btn:hover {
-      background: linear-gradient(90deg,#1bbfc3,#52ffef 85%);
-      color: #14595a;
-      box-shadow: 0 5px 24px #39fff451;
+      background: linear-gradient(90deg,#16a651,#dffae7 85%);
+      color: #13793a;
       border: 2px solid #fff;
+      box-shadow: 0 6px 36px #25ffbc41;
     }
     @media (max-width:600px) {
-      .menu-wrap { padding: 5px 0 70px 0;}
-      .menu-item { margin: 0 3vw 15px 3vw; padding: 10px 5px 18px 5px;}
-      .menu-img { width:54px; height:54px; margin-right:7px;}
+      .menu-wrap { padding: 7px 0 70px 0;}
+      .menu-item { margin: 0 3vw 16px 3vw; padding: 11px 7px 18px 7px;}
+      .menu-img { width:60px; height:60px; margin-right:7px;}
       .menu-name { font-size: 1em;}
-      .float-btn { right:12px; bottom:70px; padding:11px 19px;}
+      .float-btn { right:12px; bottom:70px; padding:11px 16px;}
     }
     @media (max-width:400px){
       .menu-item { flex-direction: column; align-items: stretch;}
       .menu-img { margin: 0 0 10px 0; }
-      .menu-bottom-prices { justify-content: center; gap: 7px;}
+      .menu-bottom-prices { justify-content: center; gap: 8px;}
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <img class="kfc-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/KFC_logo.svg" alt="KFC" />
-    KFC 420 菜单
+    <img class="kfc-logo" src="https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png" alt="KFC THC" />
+    KFC THC 菜单
   </div>
   <div class="marquee-wrap">
     <div class="marquee-inner" id="marqueeInner">
@@ -177,17 +176,15 @@
   <div class="menu-wrap" id="menu"></div>
   <button class="float-btn" onclick="window.open('https://t.me/kfc420_support','_blank')">联系客服</button>
   <div class="footer">
-    KFC420 &copy; Menu | <a href="https://t.me/T4H2C0_MEL" target="_blank">Telegram下单</a>
+    KFC THC &copy; Menu | <a href="https://t.me/T4H2C0_MEL" target="_blank">Telegram下单</a>
   </div>
   <script>
     // ---- Google Sheet 配置 ----
     const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";          // TODO: 改成你的SheetId
     const SHEET_TAB_MENU = "batmenu";        // 菜单Tab
     const SHEET_TAB_NOTICE = "notice";       // 公告Tab
-    // 推荐 opensheet.elk.sh
     const MENU_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_MENU}`;
     const NOTICE_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_NOTICE}`;
-
     // 跑马灯
     fetch(NOTICE_URL)
       .then(res=>res.json())
@@ -199,7 +196,7 @@
         marquee.innerText = text;
         clone.innerText = text;
         const inner = document.getElementById('marqueeInner');
-        let speed = 1.3;
+        let speed = 1.2;
         let pos = 0;
         function scroll() {
           let unitWidth = marquee.offsetWidth;
@@ -210,7 +207,6 @@
         }
         setTimeout(scroll, 350);
       });
-
     // 菜单渲染
     fetch(MENU_URL)
       .then(res=>res.json())
@@ -234,7 +230,7 @@
                   ${obj.badge ? `<span class="menu-badge">${obj.badge}</span>` : ""}
                   ${obj.type ? `<span class="menu-type">${obj.type}</span>` : ""}
                 </div>
-                <div style="display:flex;align-items:center;gap:9px;margin-bottom:2px;">
+                <div style="display:flex;align-items:center;gap:11px;margin-bottom:2px;">
                   ${obj.title ? `<span class="menu-title">${obj.title}</span>` : ""}
                   ${thccbd ? `<span class="menu-thccbd">THC/CBD: ${thccbd}</span>` : ""}
                 </div>
@@ -244,10 +240,10 @@
             </div>
           `;
         }).join('');
-        document.getElementById('menu').innerHTML = html || `<div style="text-align:center;color:#ccc;margin-top:40px;">暂无菜单内容</div>`;
+        document.getElementById('menu').innerHTML = html || `<div style="text-align:center;color:#aaa;margin-top:40px;">暂无菜单内容</div>`;
       })
       .catch(err=>{
-        document.getElementById('menu').innerHTML = "<div style='text-align:center;color:var(--kfc-cyan);margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
+        document.getElementById('menu').innerHTML = "<div style='text-align:center;color:#18a651;margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
         console.error(err);
       });
   </script>
