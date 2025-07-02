@@ -7,7 +7,7 @@
   <style>
     :root {
       --bat-black: #18191b;
-      --bat-card: #232427;
+      --bat-card: rgba(35,36,39,0.90);
       --bat-gold: #ffe02e;
       --bat-yellow: #ffdf2b;
       --bat-gray: #eee;
@@ -53,22 +53,26 @@
     }
     .menu-wrap { max-width: 530px; margin: 0 auto; padding: 18px 0 70px 0;}
     .menu-item {
-      display: flex; background: var(--bat-card); border-radius: 18px;
+      display: flex; 
+      background: var(--bat-card); 
+      border-radius: 18px;
       box-shadow: 0 3px 14px #ffe02e1b, 0 0 0 1.6px #ffe02e33;
-      margin:0 12px 18px 12px; padding: 13px 12px 18px 12px; align-items: flex-start;
+      margin:0 12px 18px 12px; 
+      padding: 13px 12px 18px 12px; 
+      align-items: flex-start;
       border: 1.2px solid var(--bat-gold);
       transition:.15s;
       position: relative;
       flex-direction: row;
-      overflow: hidden; /* 关键，加上这个 */
+      overflow: hidden;
     }
     /* LOGO 水印背景 */
     .menu-item::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: url('https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png') center center/88% no-repeat;
-      opacity: 0.20;
+      background: url('https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png') center center/85% no-repeat;
+      opacity: 0.20; /* 透明度，自己可调，0.15~0.25 */
       pointer-events: none;
       z-index: 0;
     }
@@ -79,7 +83,10 @@
       background: #252323; margin-right: 13px; border: 1.3px solid var(--bat-gold);
       box-shadow:0 2px 10px #ffe02e3a;
       flex-shrink: 0;
+      cursor: pointer;
+      transition: box-shadow .18s;
     }
+    .menu-img:hover { box-shadow:0 4px 20px #ffe02ea0; }
     .menu-info { flex:1; min-width: 0; display:flex; flex-direction:column;}
     .menu-name {
       font-size: 1.12em; font-weight: 700; margin-bottom: 2.5px;
@@ -135,6 +142,14 @@
       .menu-img { margin: 0 0 10px 0; }
       .menu-bottom-prices { justify-content: center; gap: 7px;}
     }
+
+    /* 图片放大弹窗 */
+    .img-modal-bg {
+      position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.75); display: none; justify-content: center; align-items: center; z-index: 9999;
+    }
+    .img-modal-bg.active { display: flex; }
+    .img-modal-bg img { max-width: 90vw; max-height: 84vh; border-radius: 16px; box-shadow: 0 2px 28px #000a; background: #111;}
   </style>
 </head>
 <body>
@@ -151,6 +166,12 @@
   <div class="footer">
     Batman1788 &copy; Menu | <a href="https://t.me/batman1788" target="_blank">Telegram下单</a>
   </div>
+
+  <!-- 图片弹窗组件 -->
+  <div class="img-modal-bg" id="imgModal" onclick="this.classList.remove('active')">
+    <img id="imgModalPic" src="" />
+  </div>
+
   <script>
     // ---- 修改这里即可 ----
     const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";
@@ -177,15 +198,19 @@
 
         function scroll() {
           let unitWidth = marquee.offsetWidth;
-          let totalWidth = unitWidth * 2;
           pos -= speed;
-          // 只有当所有内容都完全走出左侧才重置
           if (Math.abs(pos) >= unitWidth) pos = 0;
           inner.style.transform = `translateX(${pos}px)`;
           requestAnimationFrame(scroll);
         }
         setTimeout(scroll, 350);
       });
+
+    // 放大图片函数
+    window.showImgModal = function(src){
+      document.getElementById('imgModalPic').src = src;
+      document.getElementById('imgModal').classList.add('active');
+    }
 
     // 菜单
     fetch(MENU_URL)
@@ -204,7 +229,7 @@
 
           return `
             <div class="menu-item">
-              ${obj.img ? `<img class="menu-img" src="${obj.img}" loading="lazy"/>` : ""}
+              ${obj.img ? `<img class="menu-img" src="${obj.img}" loading="lazy" onclick="showImgModal('${obj.img}')"/>` : ""}
               <div class="menu-info">
                 <div class="menu-name">
                   ${obj.name || ""}
