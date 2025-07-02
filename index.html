@@ -66,18 +66,16 @@
       flex-direction: row;
       overflow: hidden;
     }
-    /* LOGO 水印背景 */
     .menu-item::before {
       content: "";
       position: absolute;
       inset: 0;
       background: url('https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png') center center/85% no-repeat;
-      opacity: 0.20; /* 透明度，自己可调，0.15~0.25 */
+      opacity: 0.18;
       pointer-events: none;
       z-index: 0;
     }
     .menu-item > * { position: relative; z-index: 1; }
-
     .menu-img {
       width: 68px; height: 68px; border-radius: 13px; object-fit: cover;
       background: #252323; margin-right: 13px; border: 1.3px solid var(--bat-gold);
@@ -142,7 +140,6 @@
       .menu-img { margin: 0 0 10px 0; }
       .menu-bottom-prices { justify-content: center; gap: 7px;}
     }
-
     /* 图片放大弹窗 */
     .img-modal-bg {
       position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
@@ -150,6 +147,34 @@
     }
     .img-modal-bg.active { display: flex; }
     .img-modal-bg img { max-width: 90vw; max-height: 84vh; border-radius: 16px; box-shadow: 0 2px 28px #000a; background: #111;}
+    /* 悬浮客服按钮 */
+    .contact-fab {
+      position: fixed;
+      right: 21px;
+      bottom: 26px;
+      z-index: 2000;
+      background: #ffe02e;
+      border-radius: 50%;
+      box-shadow: 0 3px 18px #0006;
+      padding: 0;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: box-shadow .16s,transform .12s;
+      border: none;
+      text-decoration: none;
+    }
+    .contact-fab:hover {
+      box-shadow: 0 7px 28px #ffe02e55;
+      transform: scale(1.08);
+    }
+    @media (max-width: 480px){
+      .contact-fab { right: 12px; bottom: 12px; width: 44px; height: 44px;}
+      .contact-fab svg { width: 22px; height: 22px;}
+    }
   </style>
 </head>
 <body>
@@ -166,6 +191,14 @@
   <div class="footer">
     Batman1788 &copy; Menu | <a href="https://t.me/batman1788" target="_blank">Telegram Order</a>
   </div>
+
+  <!-- 悬浮客服按钮 -->
+  <a href="https://t.me/yourcustomer_service" target="_blank" class="contact-fab" title="联系客服">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" style="vertical-align:middle">
+      <circle cx="12" cy="12" r="12" fill="#ffe02e" />
+      <path d="M17 10.5c0-.83-.67-1.5-1.5-1.5h-7C7.67 9 7 9.67 7 10.5v3c0 .83.67 1.5 1.5 1.5H9v2l3-2h3.5c.83 0 1.5-.67 1.5-1.5v-3z" fill="#18191b"/>
+    </svg>
+  </a>
 
   <!-- 图片弹窗组件 -->
   <div class="img-modal-bg" id="imgModal" onclick="this.classList.remove('active')">
