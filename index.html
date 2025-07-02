@@ -104,7 +104,7 @@
     <span class="bat-logo">🦇</span> Batman1788
   </div>
   <div class="marquee-wrap">
-    <div class="marquee-inner" style="white-space:nowrap;display:flex;">
+    <div class="marquee-inner" id="marqueeInner" style="white-space:nowrap;display:flex;">
       <span class="marquee-text" id="marqueeText"></span>
       <span class="marquee-text" id="marqueeTextClone"></span>
     </div>
@@ -131,17 +131,20 @@
         const marquee = document.getElementById('marqueeText');
         const clone = document.getElementById('marqueeTextClone');
         marquee.innerText = text;
-        clone.innerText = text; // 克隆一份
+        clone.innerText = text;
 
-        let wrap = marquee.parentNode;
-        let speed = 1.2;  // 调整滚动速度
-
+        const inner = document.getElementById('marqueeInner');
+        let speed = 1.2;
         let pos = 0;
+
+        function getUnitWidth() {
+          return marquee.offsetWidth;
+        }
         function scroll() {
           pos -= speed;
-          // 总宽度 = 2*marquee.offsetWidth
-          if (Math.abs(pos) > marquee.offsetWidth) pos = 0;
-          wrap.style.transform = `translateX(${pos}px)`;
+          let unitWidth = getUnitWidth();
+          if (pos <= -unitWidth) pos = 0;
+          inner.style.transform = `translateX(${pos}px)`;
           requestAnimationFrame(scroll);
         }
         setTimeout(scroll, 200);
