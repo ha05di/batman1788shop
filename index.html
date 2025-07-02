@@ -137,17 +137,17 @@
         let speed = 1.2;
         let pos = 0;
 
-        function getUnitWidth() {
-          return marquee.offsetWidth;
-        }
+        // 等待渲染，获取内容总宽度
         function scroll() {
+          let unitWidth = marquee.offsetWidth;
+          let totalWidth = unitWidth * 2;
           pos -= speed;
-          let unitWidth = getUnitWidth();
-          if (pos <= -unitWidth) pos = 0;
+          // 只有当所有内容都完全走出左侧才重置
+          if (Math.abs(pos) >= unitWidth) pos = 0;
           inner.style.transform = `translateX(${pos}px)`;
           requestAnimationFrame(scroll);
         }
-        setTimeout(scroll, 200);
+        setTimeout(scroll, 350);
       });
 
     // 菜单
