@@ -103,7 +103,12 @@
   <div class="header">
     <span class="bat-logo">🦇</span> Batman1788
   </div>
-  <div class="marquee-wrap"><span class="marquee-text" id="marqueeText"></span></div>
+  <div class="marquee-wrap">
+    <div class="marquee-inner" style="white-space:nowrap;display:flex;">
+      <span class="marquee-text" id="marqueeText"></span>
+      <span class="marquee-text" id="marqueeTextClone"></span>
+    </div>
+  </div>
   <div class="menu-wrap" id="menu"></div>
   <div class="footer">
     Batman1788 &copy; Menu | <a href="https://t.me/batman1788" target="_blank">Telegram下单</a>
@@ -121,20 +126,25 @@
     fetch(NOTICE_URL)
       .then(res=>res.json())
       .then(rows=>{
-        // rows 格式: [{msg: "内容1"}, {msg:"内容2"}, ...]
         let notices = rows.map(r=>r.msg).filter(Boolean);
         let text = notices.join("   |   ");
         const marquee = document.getElementById('marqueeText');
+        const clone = document.getElementById('marqueeTextClone');
         marquee.innerText = text;
-        // 跑马灯动画
-        let pos = marquee.parentNode.offsetWidth;
+        clone.innerText = text; // 克隆一份
+
+        let wrap = marquee.parentNode;
+        let speed = 1.2;  // 调整滚动速度
+
+        let pos = 0;
         function scroll() {
-          pos -= 1.2;
-          if(pos < -marquee.offsetWidth) pos = marquee.parentNode.offsetWidth;
-          marquee.style.transform = `translateX(${pos}px)`;
+          pos -= speed;
+          // 总宽度 = 2*marquee.offsetWidth
+          if (Math.abs(pos) > marquee.offsetWidth) pos = 0;
+          wrap.style.transform = `translateX(${pos}px)`;
           requestAnimationFrame(scroll);
         }
-        setTimeout(scroll, 350);
+        setTimeout(scroll, 200);
       });
 
     // 菜单
