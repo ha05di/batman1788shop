@@ -9,7 +9,7 @@
       --kfc-green: #14a34a;
       --kfc-green-dark: #0e7736;
       --kfc-white: #fff;
-      --kfc-card-bg: rgba(255,255,255,0.58); /* 半透明白 */
+      --kfc-card-bg: rgba(255,255,255,0.58);
       --kfc-border: #14a34a;
     }
     body {
@@ -23,6 +23,19 @@
       background-repeat: no-repeat;
       background-position: center;
       background-attachment: fixed;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.36);  /* 0.36 越高越暗 */
+      z-index: 0;
+      pointer-events: none;
+    }
+    body, .header, .footer, .menu-wrap {
+      position: relative;
+      z-index: 1;
     }
     .header {
       padding: 28px 0 16px 0;
@@ -188,7 +201,7 @@
   <script>
     // --- Google Sheet 配置 ---
     const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";
-    const SHEET_TAB_MENU = "batmenu";
+    const SHEET_TAB_MENU = "kfcmenu";
     const MENU_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_MENU}`;
     fetch(MENU_URL)
       .then(res=>res.json())
