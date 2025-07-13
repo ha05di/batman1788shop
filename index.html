@@ -2,52 +2,59 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>KFC THC Green Menu</title>
+  <title>KFC Green THC Menu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
       --kfc-green: #14a34a;
       --kfc-green-dark: #0e7736;
       --kfc-white: #fff;
-      --kfc-card: #f8faf7;
-      --kfc-shadow: #14a34a29;
+      --kfc-card-bg: rgba(255,255,255,0.58); /* 半透明白 */
       --kfc-border: #14a34a;
-      --kfc-price: #14a34a;
-      --kfc-badge: #14a34a;
-      --kfc-gray: #474747;
     }
     body {
-      margin: 0; background: var(--kfc-green); color: #212a20;
+      margin: 0;
+      background: var(--kfc-green);
+      color: #212a20;
       font-family: 'Segoe UI','PingFang SC','Microsoft YaHei',Arial,sans-serif;
+      min-height: 100vh;
+      background-image: url('https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
     }
     .header {
       padding: 28px 0 16px 0;
       text-align: center;
-      background: var(--kfc-green);
+      background: transparent;
+      backdrop-filter: blur(2px);
     }
     .header img {
       height: 72px; border-radius: 14px; box-shadow: 0 2px 24px #fff4, 0 0 0 4px #fff6;
     }
     .header-title {
-      color: var(--kfc-white);
+      color: #fff;
       font-weight: 900;
       font-size: 1.35em;
       letter-spacing: 2px;
       margin-top: 8px;
-      text-shadow: 0 3px 18px #fff5, 0 1px 0 #0e773633;
+      text-shadow: 0 3px 18px #0009, 0 1px 0 #0e773633;
+      filter: drop-shadow(0 2px 6px #14a34a80);
     }
-    .menu-wrap { max-width: 510px; margin: 0 auto; padding: 20px 0 70px 0; }
+    .menu-wrap { max-width: 510px; margin: 0 auto; padding: 20px 0 80px 0; }
     .menu-item {
       display: flex;
-      background: var(--kfc-card);
+      background: var(--kfc-card-bg);
       border-radius: 18px;
-      box-shadow: 0 3px 18px var(--kfc-shadow);
-      margin:0 13px 20px 13px;
+      box-shadow: 0 3px 20px #fff7, 0 1px 16px #14a34a3b;
+      margin:0 13px 22px 13px;
       padding: 15px 12px 18px 12px;
       border: 2px solid var(--kfc-border);
       align-items: flex-start;
       flex-direction: row;
       transition: box-shadow .18s;
+      backdrop-filter: blur(3px);
     }
     .menu-img {
       width: 78px; height: 78px; border-radius: 13px;
@@ -55,6 +62,12 @@
       margin-right: 17px; border: 2.5px solid var(--kfc-green-dark);
       box-shadow:0 2px 12px #14a34a36;
       flex-shrink: 0;
+      transition: transform .18s;
+      cursor: pointer;
+    }
+    .menu-img:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 5px #14a34a44, 0 4px 24px #fff4;
     }
     .menu-info { flex:1; min-width: 0; display: flex; flex-direction: column;}
     .menu-name {
@@ -65,7 +78,7 @@
     }
     .menu-badge {
       display: inline-block;
-      background: var(--kfc-badge);
+      background: var(--kfc-green);
       color: #fff;
       border-radius: 8px;
       font-size: .84em; font-weight: 700;
@@ -91,10 +104,11 @@
     }
     .menu-desc {
       font-size:1em;
-      color: var(--kfc-gray);
+      color: #292929;
       margin:7px 0 0 0;
       line-height: 1.5;
       font-weight: 400;
+      text-shadow: 0 1px 10px #fff6;
     }
     .menu-bottom-prices {
       display: flex;
@@ -127,10 +141,11 @@
     }
     .footer {
       position:fixed; left:0; bottom:0; width:100vw;
-      color:var(--kfc-green-dark); background: #fff;
+      color:var(--kfc-green-dark); background: #fffdfcf2;
       font-size:.99em; text-align:center; padding:14px 0 10px 0; z-index:22;
       border-top: 2.8px solid var(--kfc-border);
       font-weight: 700;
+      backdrop-filter: blur(1.5px);
     }
     a { color: var(--kfc-green-dark); text-decoration:underline; }
     @media (max-width:700px) {
@@ -144,6 +159,18 @@
       .menu-img { margin: 0 0 10px 0; }
       .menu-bottom-prices { justify-content: center; gap: 7px;}
     }
+    /* 图片放大灯箱 */
+    .img-lightbox-bg {
+      position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:8888;
+      background:rgba(20,20,20,.89);
+      display:none;align-items:center;justify-content:center;
+    }
+    .img-lightbox-bg.active { display:flex; }
+    .img-lightbox-bg img { max-width:90vw; max-height:84vh; border-radius:14px; box-shadow:0 6px 42px #000a;}
+    .img-lightbox-bg:after {
+      content:"✖";
+      color:#fff; font-size:2.1em; position: absolute; right:4vw; top:3vw; cursor:pointer; text-shadow:0 2px 10px #000c;
+    }
   </style>
 </head>
 <body>
@@ -155,16 +182,18 @@
   <div class="footer">
     KFC &copy; Green Menu | <a href="https://t.me/batman1788" target="_blank">Telegram下单</a>
   </div>
+  <div class="img-lightbox-bg" id="lightbox" onclick="this.classList.remove('active');">
+    <img src="" id="lightbox-img" alt="">
+  </div>
   <script>
     // --- Google Sheet 配置 ---
-    const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs"; // 替换为你的
-    const SHEET_TAB_MENU = "batmenu";  // 替换为你的tab
+    const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";
+    const SHEET_TAB_MENU = "batmenu";
     const MENU_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_MENU}`;
     fetch(MENU_URL)
       .then(res=>res.json())
       .then(rows=>{
         const html = rows.map(obj=>{
-          // 多规格价钱
           let priceBtns = '';
           for(let i=1;i<=3;i++){
             if(obj['spec'+i] && obj['price'+i]){
@@ -175,7 +204,7 @@
           if(!thccbd && (obj.thc || obj.cbd)) thccbd = (obj.thc?obj.thc:'')+(obj.cbd?(' / '+obj.cbd):'');
           return `
             <div class="menu-item">
-              ${obj.img ? `<img class="menu-img" src="${obj.img}" loading="lazy"/>` : ""}
+              ${obj.img ? `<img class="menu-img" src="${obj.img}" loading="lazy" onclick="showLightbox('${obj.img}')"/>` : ""}
               <div class="menu-info">
                 <div class="menu-name">
                   ${obj.name || ""}
@@ -198,6 +227,18 @@
         document.getElementById('menu').innerHTML = "<div style='text-align:center;color:var(--kfc-green);margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
         console.error(err);
       });
+
+    // 图片放大灯箱功能
+    window.showLightbox = function(src) {
+      var box = document.getElementById('lightbox');
+      var img = document.getElementById('lightbox-img');
+      img.src = src;
+      box.classList.add('active');
+    }
+    // 点X或黑色关闭
+    document.getElementById('lightbox').onclick = function(e){
+      if(e.target===this) this.classList.remove('active');
+    }
   </script>
 </body>
 </html>
