@@ -2,217 +2,174 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>KFC THC 绿白菜单</title>
+  <title>KFC Green Menu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
-      --kfc-green: #18a651;
-      --kfc-green-dark: #12903f;
-      --kfc-green-light: #24e37b;
+      --kfc-green: #23b08c;
+      --kfc-green-dark: #178c69;
       --kfc-white: #fff;
-      --kfc-gray: #f4fff8;
-      --kfc-card: #f4fff8;
-      --kfc-shadow: 0 3px 22px #18a65125, 0 1px 0 #12893118;
+      --kfc-card: #f6f9fa;
+      --kfc-shadow: #23b08c24;
+      --kfc-border: #15a375;
+      --kfc-badge: #23b08c;
+      --kfc-price: #23b08c;
+      --kfc-gray: #777;
     }
     body {
-      margin: 0; background: var(--kfc-green); color: var(--kfc-green-dark);
-      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      margin: 0; background: var(--kfc-green); color: #232;
+      font-family: 'Segoe UI','PingFang SC','Microsoft YaHei',Arial,sans-serif;
     }
     .header {
-      padding: 15px 0 7px 0;
+      padding: 24px 0 12px 0;
       text-align: center;
-      font-size: 1.35em;
-      font-weight: 900;
-      letter-spacing: 2px;
       background: var(--kfc-green);
+    }
+    .header img {
+      height: 62px;
+      border-radius: 12px;
+      box-shadow: 0 2px 18px #fff3, 0 0 0 3px #fff8;
+    }
+    .header-title {
       color: var(--kfc-white);
-      border-bottom: 2px solid #16c85b;
-      position: sticky; top: 0; z-index: 11;
-      box-shadow: 0 1px 18px #1fdc7e18;
+      font-weight: 900;
+      font-size: 1.35em;
+      letter-spacing: 2px;
+      margin-top: 6px;
+      text-shadow: 0 3px 16px #fff4, 0 1px 0 #167c55;
     }
-    .header .kfc-logo {
-      height: 36px; width: 36px;
-      vertical-align: middle;
-      margin-right: 12px;
-      border-radius: 8px;
-      box-shadow: 0 2px 7px #7cffb245;
-      background: #fff;
-      object-fit: cover;
-    }
-    .marquee-wrap {
-      background: #fff;
-      border-bottom: 2px solid #18a65115;
-      overflow: hidden;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      height: 39px;
-    }
-    .marquee-inner { white-space:nowrap; display:flex; }
-    .marquee-text {
-      color: #0e8842;
-      font-size: 1.08em; font-weight: 700; line-height:39px;
-      white-space: nowrap;
-      will-change: transform;
-      text-shadow:0 1px 11px #17be4577;
-      letter-spacing: 1.5px;
-      padding-right: 34px;
-    }
-    .menu-wrap { max-width: 570px; margin: 0 auto; padding: 22px 0 75px 0;}
+    .menu-wrap { max-width: 510px; margin: 0 auto; padding: 20px 0 70px 0; }
     .menu-item {
-      display: flex; background: var(--kfc-card); border-radius: 20px;
-      box-shadow: var(--kfc-shadow);
-      margin:0 13px 21px 13px; padding: 15px 16px 22px 16px; align-items: flex-start;
-      border: 2px solid var(--kfc-green);
+      display: flex;
+      background: var(--kfc-card);
+      border-radius: 18px;
+      box-shadow: 0 3px 16px var(--kfc-shadow);
+      margin:0 14px 18px 14px;
+      padding: 15px 12px 18px 12px;
+      border: 2.1px solid var(--kfc-border);
+      align-items: flex-start;
       position: relative;
       flex-direction: row;
+      transition: box-shadow .18s;
     }
     .menu-img {
-      width: 75px; height: 75px; border-radius: 18px; object-fit: cover;
-      background: #fff; margin-right: 19px; border: 2.3px solid var(--kfc-green);
-      box-shadow:0 2px 14px #16c85b36;
+      width: 74px; height: 74px; border-radius: 12px;
+      object-fit: cover;
+      background: #e5fff5;
+      margin-right: 15px;
+      border: 2px solid var(--kfc-green-dark);
+      box-shadow:0 2px 10px #15a37524;
       flex-shrink: 0;
     }
-    .menu-info { flex:1; min-width: 0; display:flex; flex-direction:column;}
+    .menu-info { flex:1; min-width: 0; display: flex; flex-direction: column;}
     .menu-name {
-      font-size: 1.16em; font-weight: 900; margin-bottom: 2.5px;
-      color: #18a651; display: flex; align-items:center;
-      text-shadow: 0 2px 8px #18a65118;
-      flex-wrap: wrap; gap: 7px;
+      font-size: 1.18em; font-weight: 800; margin-bottom: 2.5px;
+      color: var(--kfc-green-dark); display: flex; align-items:center;
+      text-shadow: 0 2px 6px #23b08c22, 0 1px 0 #fff9;
+      flex-wrap: wrap;
     }
     .menu-badge {
-      display: inline-block; background: linear-gradient(90deg, #39ef8e, #eaffeb 70%);
-      color: #187542; border-radius: 10px; font-size: .86em; font-weight: 800;
-      padding: 2px 12px 3px 12px; letter-spacing: 1.2px;
-      margin-left: 7px;
-      box-shadow:0 2px 6px #41ff9651;
-      border: 1.5px solid #13b85b11;
+      display: inline-block;
+      background: var(--kfc-badge);
+      color: #fff;
+      border-radius: 8px;
+      font-size: .84em; font-weight: 700;
+      padding: 2px 10px 2px 10px; margin-left: 8px; margin-right: 6px; letter-spacing: 1px;
+      box-shadow:0 1px 4px #178c6938;
     }
     .menu-type {
-      display:inline-block; background: #ebfff5; color:#16a651;
-      font-size:.86em; border-radius:8px; padding:2px 10px; margin-left:7px;
-      border:1.1px solid #19d46728;
+      display:inline-block;
+      background: #f1fff9;
+      color: var(--kfc-green-dark);
+      font-size:.83em; border-radius:7px; padding:2px 8px; margin-left:8px;
+      border:1px solid #21bb8b1a;
       font-weight: 600;
     }
-    .menu-title { color:#18a651; font-size:1.04em; margin-bottom:2px; margin-right:7px; font-weight: 600;}
-    .menu-thccbd { color:#18a651; font-size:0.97em; font-weight:600; margin-bottom:2px; margin-right:12px;}
-    .menu-desc { font-size:1.02em; color:#154b27; margin:10px 0 0 0; line-height:1.56;}
+    .menu-title {
+      color: var(--kfc-green-dark);
+      font-size: .97em; margin-bottom:1px; margin-right:4px;
+      font-weight: 500;
+    }
+    .menu-thccbd {
+      color: #178c69;
+      font-size: .99em; font-weight: 600; margin-bottom:2px; margin-right:10px;
+    }
+    .menu-desc {
+      font-size:.99em;
+      color: var(--kfc-gray);
+      margin:7px 0 0 0;
+      line-height: 1.48;
+      font-weight: 400;
+    }
     .menu-bottom-prices {
-      display: flex; gap: 14px;
+      display: flex;
+      gap: 13px;
       justify-content: flex-start;
-      margin-top: 20px;
+      margin-top: 16px;
       position: static;
       padding: 0 4px 0 4px;
       flex-wrap: wrap;
     }
     .menu-spec {
-      background: #dffae7; color: #13793a; font-size:1.09em; border-radius:11px;
-      padding:4.5px 14px; display:inline-block; border:2px solid #18a651;
-      box-shadow:0 2px 9px #18a65115;
+      background: var(--kfc-green-dark);
+      color: #fff;
+      font-size:1.03em;
+      border-radius:8px;
+      padding:2px 13px;
+      margin-right:2px;
+      display:inline-block;
+      border: 2px solid #fff9;
+      box-shadow:0 1px 6px #23b08c32;
       margin-bottom:0;
       font-weight: 900;
-      margin-right: 2px;
     }
     .menu-price {
-      color: #fff; background: #18a651; margin-left:7px; border-radius:6px;
-      font-weight: 900; font-size:1.11em; padding: 1px 8px;
-      box-shadow:0 1.5px 5px #25cf7c29;
-      border: 1.5px solid #18a651;
-      margin-right: 2px;
-    }
-    .footer { position:fixed; left:0; bottom:0; width:100vw; color:#fff; background:#18a651;
-      font-size:1.06em; text-align:center; padding:13px 0 9px 0; z-index:22; border-top: 2px solid #eaffeb;}
-    a { color: #12903f; text-decoration:underline; font-weight: 800;}
-    .float-btn {
-      position: fixed;
-      right: 23px;
-      bottom: 80px;
-      z-index: 999;
-      background: linear-gradient(90deg,#2cdd8f,#19a651 75%);
       color: #fff;
-      font-size: 1.09em;
+      font-weight: 900;
+      font-size:1.11em;
+      margin-left:4px;
+      text-shadow: 0 2px 8px #23b08c11, 0 0px 1px #178c6942;
+    }
+    .footer {
+      position:fixed; left:0; bottom:0; width:100vw;
+      color:var(--kfc-green-dark); background: #fff;
+      font-size:.98em; text-align:center; padding:13px 0 8px 0; z-index:22;
+      border-top: 2.5px solid var(--kfc-border);
       font-weight: 700;
-      padding: 13px 28px 12px 28px;
-      border-radius: 100px;
-      box-shadow: 0 8px 32px #16c85b28;
-      border: 0;
-      cursor: pointer;
-      outline: none;
-      border: 2px solid #dffae7;
-      letter-spacing: 1.5px;
-      transition: all .17s;
     }
-    .float-btn:hover {
-      background: linear-gradient(90deg,#16a651,#dffae7 85%);
-      color: #13793a;
-      border: 2px solid #fff;
-      box-shadow: 0 6px 36px #25ffbc41;
+    a { color: var(--kfc-green-dark); text-decoration:underline; }
+    @media (max-width:700px) {
+      .menu-wrap { padding: 5px 0 63px 0;}
+      .menu-item { margin: 0 2vw 15px 2vw; padding: 10px 5px 17px 5px;}
+      .menu-img { width:60px; height:60px; margin-right:8px;}
+      .menu-name { font-size: .97em;}
     }
-    @media (max-width:600px) {
-      .menu-wrap { padding: 7px 0 70px 0;}
-      .menu-item { margin: 0 3vw 16px 3vw; padding: 11px 7px 18px 7px;}
-      .menu-img { width:60px; height:60px; margin-right:7px;}
-      .menu-name { font-size: 1em;}
-      .float-btn { right:12px; bottom:70px; padding:11px 16px;}
-    }
-    @media (max-width:400px){
+    @media (max-width:410px){
       .menu-item { flex-direction: column; align-items: stretch;}
       .menu-img { margin: 0 0 10px 0; }
-      .menu-bottom-prices { justify-content: center; gap: 8px;}
+      .menu-bottom-prices { justify-content: center; gap: 7px;}
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <img class="kfc-logo" src="https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png" alt="KFC THC" />
-    KFC THC 菜单
-  </div>
-  <div class="marquee-wrap">
-    <div class="marquee-inner" id="marqueeInner">
-      <span class="marquee-text" id="marqueeText"></span>
-      <span class="marquee-text" id="marqueeTextClone"></span>
-    </div>
+    <img src="https://raw.githubusercontent.com/ha05di/batman1788shop/main/logo.png" alt="KFC THC" />
+    <div class="header-title">KFC GREEN MENU</div>
   </div>
   <div class="menu-wrap" id="menu"></div>
-  <button class="float-btn" onclick="window.open('https://t.me/kfc420_support','_blank')">联系客服</button>
   <div class="footer">
-    KFC THC &copy; Menu | <a href="https://t.me/T4H2C0_MEL" target="_blank">Telegram下单</a>
+    KFC &copy; Green Menu | <a href="https://t.me/batman1788" target="_blank">Telegram下单</a>
   </div>
   <script>
-    // ---- Google Sheet 配置 ----
-    const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";          // TODO: 改成你的SheetId
-    const SHEET_TAB_MENU = "batmenu";        // 菜单Tab
-    const SHEET_TAB_NOTICE = "notice";       // 公告Tab
+    // --- Google Sheet 配置 ---
+    const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs";   // 替换为你的
+    const SHEET_TAB_MENU = "batmenu";  // 替换为你的tab
     const MENU_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_MENU}`;
-    const NOTICE_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_TAB_NOTICE}`;
-    // 跑马灯
-    fetch(NOTICE_URL)
-      .then(res=>res.json())
-      .then(rows=>{
-        let notices = rows.map(r=>r.msg).filter(Boolean);
-        let text = notices.join("   |   ");
-        const marquee = document.getElementById('marqueeText');
-        const clone = document.getElementById('marqueeTextClone');
-        marquee.innerText = text;
-        clone.innerText = text;
-        const inner = document.getElementById('marqueeInner');
-        let speed = 1.2;
-        let pos = 0;
-        function scroll() {
-          let unitWidth = marquee.offsetWidth;
-          pos -= speed;
-          if (Math.abs(pos) >= unitWidth) pos = 0;
-          inner.style.transform = `translateX(${pos}px)`;
-          requestAnimationFrame(scroll);
-        }
-        setTimeout(scroll, 350);
-      });
-    // 菜单渲染
     fetch(MENU_URL)
       .then(res=>res.json())
       .then(rows=>{
         const html = rows.map(obj=>{
-          // 多规格
+          // 多规格价钱
           let priceBtns = '';
           for(let i=1;i<=3;i++){
             if(obj['spec'+i] && obj['price'+i]){
@@ -230,7 +187,7 @@
                   ${obj.badge ? `<span class="menu-badge">${obj.badge}</span>` : ""}
                   ${obj.type ? `<span class="menu-type">${obj.type}</span>` : ""}
                 </div>
-                <div style="display:flex;align-items:center;gap:11px;margin-bottom:2px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px;">
                   ${obj.title ? `<span class="menu-title">${obj.title}</span>` : ""}
                   ${thccbd ? `<span class="menu-thccbd">THC/CBD: ${thccbd}</span>` : ""}
                 </div>
@@ -240,10 +197,10 @@
             </div>
           `;
         }).join('');
-        document.getElementById('menu').innerHTML = html || `<div style="text-align:center;color:#aaa;margin-top:40px;">暂无菜单内容</div>`;
+        document.getElementById('menu').innerHTML = html || `<div style="text-align:center;color:#ccc;margin-top:40px;">暂无菜单内容</div>`;
       })
       .catch(err=>{
-        document.getElementById('menu').innerHTML = "<div style='text-align:center;color:#18a651;margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
+        document.getElementById('menu').innerHTML = "<div style='text-align:center;color:var(--kfc-green);margin-top:36vw;font-size:1.08em;'>菜单加载失败，请刷新重试。</div>";
         console.error(err);
       });
   </script>
