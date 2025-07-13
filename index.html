@@ -2,14 +2,14 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>THC 420 Menu</title>
+  <title>KFC Green THC Menu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
       --kfc-green: #14a34a;
       --kfc-green-dark: #0e7736;
       --kfc-white: #fff;
-      --kfc-card-bg: rgba(255,255,255,0.58);
+      --kfc-card-bg: rgba(255,255,255,0.73);
       --kfc-border: #14a34a;
     }
     body {
@@ -29,14 +29,11 @@
       content: "";
       position: fixed;
       left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.36);  /* 0.36 越高越暗 */
+      background: rgba(0,0,0,0.28);
       z-index: 0;
       pointer-events: none;
     }
-    body, .header, .footer, .menu-wrap {
-      position: relative;
-      z-index: 1;
-    }
+    body, .header, .footer, .menu-wrap { position: relative; z-index: 1; }
     .header {
       padding: 28px 0 16px 0;
       text-align: center;
@@ -44,58 +41,70 @@
       backdrop-filter: blur(2px);
     }
     .header img {
-      height: 72px; border-radius: 14px; box-shadow: 0 2px 24px #fff4, 0 0 0 4px #fff6;
+      height: 64px; border-radius: 14px; box-shadow: 0 2px 18px #fff4, 0 0 0 4px #fff6;
     }
     .header-title {
       color: #fff;
       font-weight: 900;
-      font-size: 1.35em;
+      font-size: 1.32em;
       letter-spacing: 2px;
       margin-top: 8px;
       text-shadow: 0 3px 18px #0009, 0 1px 0 #0e773633;
       filter: drop-shadow(0 2px 6px #14a34a80);
     }
-    .menu-wrap { max-width: 510px; margin: 0 auto; padding: 20px 0 80px 0; }
+    .menu-wrap { max-width: 520px; margin: 0 auto; padding: 20px 0 80px 0;}
     .menu-item {
-      display: flex;
       background: var(--kfc-card-bg);
       border-radius: 18px;
       box-shadow: 0 3px 20px #fff7, 0 1px 16px #14a34a3b;
       margin:0 13px 22px 13px;
-      padding: 15px 12px 18px 12px;
+      padding: 13px 15px 18px 15px;
       border: 2px solid var(--kfc-border);
-      align-items: flex-start;
-      flex-direction: row;
       transition: box-shadow .18s;
-      backdrop-filter: blur(3px);
+      backdrop-filter: blur(2.5px);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .menu-img {
-      width: 78px; height: 78px; border-radius: 13px;
-      object-fit: cover; background: #e8fff2;
-      margin-right: 17px; border: 2.5px solid var(--kfc-green-dark);
+      width: 93%;
+      max-width: 330px;
+      height: 148px;
+      border-radius: 14px 14px 6px 6px;
+      object-fit: cover;
+      background: #e8fff2;
+      border: 2.3px solid var(--kfc-green-dark);
       box-shadow:0 2px 12px #14a34a36;
-      flex-shrink: 0;
-      transition: transform .18s;
+      margin-bottom: 13px;
+      margin-top: 0;
+      display: block;
       cursor: pointer;
+      transition: box-shadow .18s, transform .16s;
     }
     .menu-img:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 0 5px #14a34a44, 0 4px 24px #fff4;
+      box-shadow: 0 0 0 7px #14a34a30, 0 4px 18px #fff4;
+      transform: scale(1.04);
     }
-    .menu-info { flex:1; min-width: 0; display: flex; flex-direction: column;}
+    .menu-info {
+      width: 100%;
+      display: flex; flex-direction: column; align-items: flex-start;
+    }
     .menu-name {
-      font-size: 1.22em; font-weight: 900; margin-bottom: 2.5px;
-      color: var(--kfc-green-dark); display: flex; align-items:center;
+      font-size: 1.17em; font-weight: 900; margin-bottom: 2.5px;
+      color: var(--kfc-green-dark);
+      display: flex; align-items: center;
       text-shadow: 0 2px 8px #14a34a11, 0 1px 0 #fff9;
       flex-wrap: wrap;
+      line-height: 1.13;
     }
     .menu-badge {
       display: inline-block;
       background: var(--kfc-green);
       color: #fff;
       border-radius: 8px;
-      font-size: .84em; font-weight: 700;
-      padding: 2px 11px 2px 11px; margin-left: 10px; margin-right: 6px; letter-spacing: 1px;
+      font-size: .85em; font-weight: 700;
+      padding: 2px 10px 2px 10px; margin-left: 10px; margin-right: 6px; letter-spacing: 1px;
       box-shadow:0 1px 6px #14a34a39;
     }
     .menu-type {
@@ -164,12 +173,10 @@
     @media (max-width:700px) {
       .menu-wrap { padding: 5px 0 63px 0;}
       .menu-item { margin: 0 2vw 15px 2vw; padding: 10px 5px 17px 5px;}
-      .menu-img { width:62px; height:62px; margin-right:8px;}
+      .menu-img { max-width:96vw; height: 31vw; min-height:54px;}
       .menu-name { font-size: 1em;}
     }
-    @media (max-width:410px){
-      .menu-item { flex-direction: column; align-items: stretch;}
-      .menu-img { margin: 0 0 10px 0; }
+    @media (max-width:400px){
       .menu-bottom-prices { justify-content: center; gap: 7px;}
     }
     /* 图片放大灯箱 */
@@ -193,7 +200,7 @@
   </div>
   <div class="menu-wrap" id="menu"></div>
   <div class="footer">
-    THC 420 &copy; Menu | <a href="https://t.me/T4H2C0_MEL" target="_blank">Telegram Order</a>
+    KFC &copy; Green Menu | <a href="https://t.me/T4H2C0_MEL" target="_blank">Telegram下单</a>
   </div>
   <div class="img-lightbox-bg" id="lightbox" onclick="this.classList.remove('active');">
     <img src="" id="lightbox-img" alt="">
@@ -248,7 +255,6 @@
       img.src = src;
       box.classList.add('active');
     }
-    // 点X或黑色关闭
     document.getElementById('lightbox').onclick = function(e){
       if(e.target===this) this.classList.remove('active');
     }
