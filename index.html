@@ -315,7 +315,69 @@
 
     async function loadShops(){
       try{
-        const rows = await fetch(`${URL.shops
+        const rows = await fetch(`${URL.shops}?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
+        SHOPS = (rows||[]).map(normalizeShop).filter(s=>s.enabled).sort((a,b)=>a.sort-b.sort || a.name.localeCompare(b.name));
+      }catch(e){ SHOPS = []; }
+      if(!SHOPS.length){ SHOPS = [normalizeShop({enabled:'yes',id:'main',name:'Batman1788',tab:TABS.menu})]; }
+      const saved = localStorage.getItem('shop_id');
+      const pick = SHOPS.find(s=>s.id===saved) || SHOPS[0];
+      await setShop(pick.id);
+      renderShopSwitcher();
+    }
+
+    function renderShopSwitcher(){
+      const sel = document.getElementById('shopSelect');
+      sel.innerHTML = SHOPS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+      sel.value = CUR?.id || SHOPS[0].id;
+      sel.onchange = (e)=> setShop(e.target.value);
+
+      const chips = document.getElementById('shopChips');
+      chips.innerHTML = SHOPS.map(s=>`<button class="chip ${s.id===CUR.id?'active':''}" onclick=\"setShop('${s.id}')\" aria-pressed=\"${s.id===CUR.id}\" title=\"${s.name}\"><img class=\"shop-chip-logo\" src=\"${s.logo || 'static/batman_logo.png'}\" alt=\"${s.name} logo\"/><span class=\"shop-chip-name\">${s.name}</span></button>`).join('');
+
+      document.getElementById('shopPickup').textContent = `Pickup: ${CUR.pickup_address || '-'}`;
+      const tgA = CUR.tg ? `<a href="${CUR.tg}" target="_blank" rel="noopener">Telegram</a>` : '';
+      document.getElementById('shopTelegram').innerHTML = tgA;
+      document.getElementById('custShop').value = `${CUR.name}`;
+
+      // 品牌抬头
+      const logoEl = document.getElementById('brandLogo');
+      const nameEl = document.getElementById('brandName');
+      if (logoEl) { logoEl.src = CUR.logo || 'static/batman_logo.png'; }
+      if (nameEl) { nameEl.textContent = CUR.name || 'Shop'; }
+    }
+
+    async function setShop(id){
+      const s = SHOPS.find(x=>x.id===id) || SHOPS[0];
+      CUR = s;
+      localStorage.setItem('shop_id', s.id);
+      PICKUP_ADDRESS = CUR.pickup_address || PICKUP_ADDRESS;
+      await Promise.all([loadPromos(), loadMenu()]);
+      renderShopSwitcher();
+    }
+
+    function normalizePromoRow(r){
+      return {
+        enabled: isYes(r.enabled),
+        type: String(r.type||'').trim().toLowerCase(),
+        value: Number(r.value || 0) || 0,
+        min: Number(r.min_subtotal || r.min || 0) || 0,
+        code: String(r.code||'').trim().toUpperCase(),
+        auto: isYes(r.auto),
+        stack: isYes(r.stack) || String(r.stack||'').trim().toLowerCase() !== 'no',
+        desc: String(r.desc||r.note||'').trim(),
+        start: String(r.start||'').trim(),
+        end:   String(r.end||'').trim()
+      };
+    }
+
+    async function loadPromos(){
+      try{
+        const url = URL.promo(CUR?.promo_tab);
+        const rows = await fetch(`${url}?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
+        PROMO_RULES = (rows||[]).map(normalizePromoRow).filter(p=>p.enabled && isActiveNow(p));
+      }catch(e){ PROMO_RULES = []; }
+      MANUAL_PROMO = null;
+    }
 
     // ======= Notice marquee =======
     (function(){
@@ -393,7 +455,6 @@
         shop: String(r.shop||r.shop_id||'').trim(),
         priceQ: priceQ, priceH: priceH, priceOZ: priceOZ
       };
-    };
     }
 
     async function loadMenu(){
