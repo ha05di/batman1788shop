@@ -2,29 +2,29 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>Green Mart | Multi‑Shop Menu & Delivery</title>
+  <title>Batman1788 | Multi‑Shop Menu & Delivery</title>
   <link rel="icon" href="static/favicon.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- 🔥 SEO Meta -->
-  <meta name="description" content="Green Mart - Melbourne Cannabis Menu. Same-day weed delivery, premium strains, vapes, and more. Order via Telegram." />
-  <meta name="keywords" content="Green Mart, Melbourne cannabis, weed delivery, marijuana menu, vapes, premium strains, Melbourne weed, Malvern weed" />
-  <meta name="author" content="Green Mart" />
+  <meta name="description" content="Batman1788 - Melbourne Cannabis Menu. Same-day weed delivery, premium strains, vapes, and more. Order via Telegram." />
+  <meta name="keywords" content="Batman1788, Melbourne cannabis, weed delivery, marijuana menu, vapes, premium strains, Melbourne weed, Malvern weed" />
+  <meta name="author" content="Batman1788" />
 
   <!-- 🔥 Open Graph (for link previews) -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Green Mart | Multi‑Shop Menu & Delivery" />
+  <meta property="og:title" content="Batman1788 | Multi‑Shop Menu & Delivery" />
   <meta property="og:description" content="View our premium cannabis menu. Same-day delivery in Melbourne. Order via Telegram easily." />
   <meta property="og:url" content="https://www.batman1788.shop/" />
   <meta property="og:image" content="https://www.batman1788.shop/static/batman_logo.png" />
   <meta property="og:image:width" content="300" />
   <meta property="og:image:height" content="300" />
-  <meta property="og:site_name" content="Green Mart" />
+  <meta property="og:site_name" content="Batman1788" />
 
   <!-- 🔥 Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Green Mart | Multi‑Shop Menu & Delivery" />
-  <meta name="twitter:description" content="Green Mart - Melbourne cannabis delivery menu. Same-day service, premium strains, vapes & more." />
+  <meta name="twitter:title" content="Batman1788 | Multi‑Shop Menu & Delivery" />
+  <meta name="twitter:description" content="Batman1788 - Melbourne cannabis delivery menu. Same-day service, premium strains, vapes & more." />
   <meta name="twitter:image" content="https://www.batman1788.shop/static/batman_logo.png" />
 
   <!-- Optional: Google Analytics -->
@@ -134,7 +134,7 @@
   <div class="brand">
     <img id="brandLogo" class="brand-logo" src="static/batman_logo.png" alt="Shop Logo"/>
     <div class="brand-text">
-      <div id="brandName" class="brand-name">Green Mart</div>
+      <div id="brandName" class="brand-name">Batman1788</div>
       <div class="brand-sub">Multi‑Shop Menu & Delivery</div>
     </div>
   </div>
@@ -235,7 +235,7 @@
   </div>
 
   <!-- Floating contact -->
-  <a href="https://t.me/" target="_blank" class="contact-fab" title="Customer Service" aria-label="Customer Service on Telegram">
+  <a href="https://t.me/batman1788" target="_blank" class="contact-fab" title="Customer Service" aria-label="Customer Service on Telegram">
     Customer
   </a>
 
@@ -274,7 +274,26 @@
     };
 
     // ======= Utils & State =======
-    const cart = [];
+    // == Cart per shop ==
+const cart = [];           // 当前店的购物车（内存镜像）
+let CART_SHOP = null;      // 购物车所属店 id
+
+function cartStorageKey(shopId){ return `cart::${shopId}`; }
+function loadCartFor(shopId){
+  CART_SHOP = shopId || '';
+  try{
+    const raw = localStorage.getItem(cartStorageKey(CART_SHOP));
+    const arr = raw ? JSON.parse(raw) : [];
+    cart.splice(0, cart.length, ...arr);
+  }catch(e){
+    cart.splice(0, cart.length);
+  }
+  renderCartBar();
+}
+function persistCart(){
+  if(!CART_SHOP) return;
+  try{ localStorage.setItem(cartStorageKey(CART_SHOP), JSON.stringify(cart)); }catch(e){}
+}
     const CURRENCY = "$";
     function money(n){ const v = Number(n)||0; return CURRENCY + new Intl.NumberFormat('en-US',{maximumFractionDigits:0,minimumFractionDigits:0}).format(v); }
     function normPrice(val){ const n = Number(String(val??'').replace(/[^\d.-]/g,'')); return Number.isFinite(n)? n : 0; }
@@ -307,7 +326,7 @@
         tab: String(r.tab||r.menu_tab||TABS.menu).trim(),
         promo_tab: String(r.promo_tab||r.promo_lab||'promo').trim(),
         pickup_address: String(r.pickup_address||'1 Kingston St, Malvern East VIC 3145, Australia').trim(),
-        tg: String(r.tg||r.telegram||'https://t.me/').trim(),
+        tg: String(r.tg||r.telegram||'https://t.me/batman1788').trim(),
         sort: Number(r.sort||0) || 0,
         logo: String(r.logo||r.logo_url||'').trim()
       };
@@ -318,7 +337,7 @@
         const rows = await fetch(`${URL.shops}?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
         SHOPS = (rows||[]).map(normalizeShop).filter(s=>s.enabled).sort((a,b)=>a.sort-b.sort || a.name.localeCompare(b.name));
       }catch(e){ SHOPS = []; }
-      if(!SHOPS.length){ SHOPS = [normalizeShop({enabled:'yes',id:'main',name:'Green Mart',tab:TABS.menu})]; }
+      if(!SHOPS.length){ SHOPS = [normalizeShop({enabled:'yes',id:'main',name:'Batman1788',tab:TABS.menu})]; }
       const saved = localStorage.getItem('shop_id');
       const pick = SHOPS.find(s=>s.id===saved) || SHOPS[0];
       await setShop(pick.id);
@@ -347,13 +366,17 @@
     }
 
     async function setShop(id){
-      const s = SHOPS.find(x=>x.id===id) || SHOPS[0];
-      CUR = s;
-      localStorage.setItem('shop_id', s.id);
-      PICKUP_ADDRESS = CUR.pickup_address || PICKUP_ADDRESS;
-      await Promise.all([loadPromos(), loadMenu()]);
-      renderShopSwitcher();
-    }
+  const s = SHOPS.find(x=>x.id===id) || SHOPS[0];
+  CUR = s;
+  localStorage.setItem('shop_id', s.id);
+
+  // ✨ 每店独立购物车：切店时先加载该店的购物车
+  loadCartFor(s.id);
+
+  PICKUP_ADDRESS = CUR.pickup_address || PICKUP_ADDRESS;
+  await Promise.all([loadPromos(), loadMenu()]);
+  renderShopSwitcher();
+}
 
     function normalizePromoRow(r){
       return {
@@ -499,12 +522,28 @@
 
     // ======= Cart / checkout =======
     function addToCart(name, spec, price, img, disp){
-      const hit = cart.find(x => x.name === name && x.spec === spec);
-      if (hit) hit.qty += 1; else cart.push({ name, disp: disp || stripCodeMark(name), spec, price, qty: 1, img });
+  // 若当前购物车不属于当前店，先切换到当前店购物车
+  if (CART_SHOP !== (CUR?.id || '')) {
+    loadCartFor(CUR?.id || '');
+  }
+  const hit = cart.find(x => x.name === name && x.spec === spec);
+  if (hit) hit.qty += 1; else cart.push({ name, disp: disp || stripCodeMark(name), spec, price, qty: 1, img });
+  renderCartBar();
+  persistCart();
+  if (document.getElementById('checkoutBg').classList.contains('active')) renderOrderSummary();
+});
       renderCartBar(); if (document.getElementById('checkoutBg').classList.contains('active')) renderOrderSummary();
     }
     function renderCartBar(){ const cnt = cart.reduce((a,b)=>a+b.qty,0); const total = cart.reduce((a,b)=>a+b.qty*b.price,0); document.getElementById('cartInfo').textContent = `Shopping Cart ${cnt} Item · ${money(total)}`; document.getElementById('checkoutBtn').disabled = (cnt === 0); }
-    function removeItem(idx){ if (idx < 0 || idx >= cart.length) return; cart.splice(idx, 1); renderCartBar(); renderOrderSummary(); if (cart.length === 0) closeCheckout(); }
+    function removeItem(idx){
+  if (idx < 0 || idx >= cart.length) return;
+  cart.splice(idx, 1);
+  renderCartBar();
+  renderOrderSummary();
+  persistCart();
+  if (cart.length === 0) closeCheckout();
+}
+window.removeItem = removeItem;
     window.removeItem = removeItem;
 
     // ======= Promo engine =======
@@ -631,7 +670,7 @@
           if (data.user_notified){ msg.textContent = 'Order successful! You have been notified via Telegram.'; }
           else if (data.tg_deeplink){ msg.innerHTML = 'Order placed! Click here to receive this order in Telegram 👉 ' + `<a href="${data.tg_deeplink}" target="_blank" rel="noopener">Enable notifications</a>`; }
           else { msg.textContent = 'Order Successfully！'; }
-          cart.splice(0, cart.length); renderCartBar();
+          cart.splice(0, cart.length); renderCartBar(); persistCart();
           document.getElementById('custName').value = document.getElementById('custPhone').value = document.getElementById('custAddr').value = document.getElementById('custNotes').value = '';
           document.getElementById('promoCodeInput').value = ''; MANUAL_PROMO = null; setTimeout(closeCheckout, 1200);
         } else {
@@ -665,5 +704,3 @@
   </script>
 </body>
 </html>
-
-
