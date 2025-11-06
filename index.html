@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>Green Mart | Multi‑Shop Menu & Delivery</title>
+  <title>Batman1788 | Multi‑Shop Menu & Delivery</title>
   <link rel="icon" href="/static/favicon.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -48,10 +48,10 @@
     .open-hours{color:#c8c8c8;text-align:center;margin:2px 0 10px;font-size:13px}
 
     /* shop switcher */
-    .shopbar{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;padding:10px 12px}
+    .shopbar{display:flex;gap:10px;align-items:center;padding:10px 12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
     .shopbar .sel{background:#0f1014;border:1px solid #262832;border-radius:12px;padding:8px 10px;color:#eee}
-    .shopbar .chip{border:1px solid #262832;background:#0f1014;padding:7px 10px;border-radius:999px;cursor:pointer}
-    .shopbar .chip.active{background:var(--bat-gold);color:#111;border-color:var(--bat-gold);font-weight:600}
+    .shopbar .chip{display:inline-flex;flex-direction:column;align-items:center;gap:6px;min-width:66px;padding:8px;border-radius:12px;cursor:pointer;border:1px solid #262832;background:#0f1014;scroll-snap-align:center;white-space:nowrap}
+    .shopbar .chip.active{background:var(--bat-gold);color:#111;border-color:var(--bat-gold);font-weight:700;box-shadow:0 0 0 2px rgba(255,224,46,.25)}
     .shop-meta{display:flex;gap:8px;justify-content:center;align-items:center;color:#cfcfcf;font-size:13px;margin:-4px 0 6px}
 
     .marquee-wrap{overflow:hidden;white-space:nowrap;margin:2px 16px 12px;border:1px dashed #2b2d35;border-radius:10px;color:#d5d5d5}
@@ -119,11 +119,14 @@
     @media (max-width:480px){ .phone-addr{ grid-template-columns:.6fr 1.8fr } }
     .pac-container{ z-index:100000 !important; }
       /* === Brand header === */
-    .brand{display:flex;align-items:center;gap:12px;justify-content:center;padding:16px 14px 0}
-    .brand-logo{width:44px;height:44px;border-radius:12px;object-fit:cover;border:1px solid #2a2d36;background:#0f1014}
-    .brand-text{display:flex;flex-direction:column;align-items:flex-start}
-    .brand-name{font-size:20px;font-weight:800;color:var(--bat-fg);line-height:1}
+    .brand{display:flex;flex-direction:column;align-items:center;gap:10px;justify-content:center;padding:14px 14px 0}
+    .brand-logo{width:72px;height:72px;border-radius:16px;object-fit:cover;border:1px solid #2a2d36;background:#0f1014;box-shadow:0 4px 20px rgba(0,0,0,.35)}
+    .brand-text{display:flex;flex-direction:column;align-items:center}
+    .brand-name{font-size:24px;font-weight:900;color:var(--bat-fg);line-height:1.15;text-align:center}
     .brand-sub{font-size:12px;color:#bfbfbf;margin-top:3px}
+  .shop-chip-logo{width:36px;height:36px;border-radius:10px;object-fit:cover;border:1px solid #2a2d36;background:#0e0f14}
+    .shop-chip-name{font-size:11px;color:#cfcfcf;max-width:78px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .shopbar .chip.active .shop-chip-name{color:#111}
   </style>
 </head>
 <body>
@@ -139,7 +142,7 @@
   <!-- Shop switcher -->
   <div class="shopbar" id="shopBar">
     <select id="shopSelect" class="sel" aria-label="Shop selector"></select>
-    <div id="shopChips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    <div id="shopChips" style="display:flex;gap:8px;flex-wrap:nowrap"></div>
   </div>
   <div class="shop-meta">
     <span id="shopPickup"></span>
@@ -322,7 +325,7 @@
       sel.onchange = (e)=> setShop(e.target.value);
 
       const chips = document.getElementById('shopChips');
-      chips.innerHTML = SHOPS.map(s=>`<button class="chip ${s.id===CUR.id?'active':''}" onclick="setShop('${s.id}')">${s.name}</button>`).join('');
+      chips.innerHTML = SHOPS.map(s=>`<button class="chip ${s.id===CUR.id?'active':''}" onclick="setShop('${s.id}')" aria-pressed="${s.id===CUR.id}" title="${s.name}"><img class="shop-chip-logo" src="${s.logo || '/static/batman_logo.png'}" alt="${s.name} logo"/><span class="shop-chip-name">${s.name}</span></button>`).join('');
 
       // meta line
       document.getElementById('shopPickup').textContent = `Pickup: ${CUR.pickup_address || '-'}`;
