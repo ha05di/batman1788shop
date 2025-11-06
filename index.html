@@ -2,29 +2,29 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>Batman1788 | Multi‑Shop Menu & Delivery</title>
+  <title>Green Mart | Multi‑Shop Menu & Delivery</title>
   <link rel="icon" href="static/favicon.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- 🔥 SEO Meta -->
-  <meta name="description" content="Batman1788 - Melbourne Cannabis Menu. Same-day weed delivery, premium strains, vapes, and more. Order via Telegram." />
-  <meta name="keywords" content="Batman1788, Melbourne cannabis, weed delivery, marijuana menu, vapes, premium strains, Melbourne weed, Malvern weed" />
-  <meta name="author" content="Batman1788" />
+  <meta name="description" content="Green Mart - Melbourne Cannabis Menu. Same-day weed delivery, premium strains, vapes, and more. Order via Telegram." />
+  <meta name="keywords" content="Green Mart, Melbourne cannabis, weed delivery, marijuana menu, vapes, premium strains, Melbourne weed, Malvern weed" />
+  <meta name="author" content="Green Mart" />
 
   <!-- 🔥 Open Graph (for link previews) -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Batman1788 | Multi‑Shop Menu & Delivery" />
+  <meta property="og:title" content="Green Mart | Multi‑Shop Menu & Delivery" />
   <meta property="og:description" content="View our premium cannabis menu. Same-day delivery in Melbourne. Order via Telegram easily." />
   <meta property="og:url" content="https://www.batman1788.shop/" />
   <meta property="og:image" content="https://www.batman1788.shop/static/batman_logo.png" />
   <meta property="og:image:width" content="300" />
   <meta property="og:image:height" content="300" />
-  <meta property="og:site_name" content="Batman1788" />
+  <meta property="og:site_name" content="Green Mart" />
 
   <!-- 🔥 Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Batman1788 | Multi‑Shop Menu & Delivery" />
-  <meta name="twitter:description" content="Batman1788 - Melbourne cannabis delivery menu. Same-day service, premium strains, vapes & more." />
+  <meta name="twitter:title" content="Green Mart | Multi‑Shop Menu & Delivery" />
+  <meta name="twitter:description" content="Green Mart - Melbourne cannabis delivery menu. Same-day service, premium strains, vapes & more." />
   <meta name="twitter:image" content="https://www.batman1788.shop/static/batman_logo.png" />
 
   <!-- Optional: Google Analytics -->
@@ -134,7 +134,7 @@
   <div class="brand">
     <img id="brandLogo" class="brand-logo" src="static/batman_logo.png" alt="Shop Logo"/>
     <div class="brand-text">
-      <div id="brandName" class="brand-name">Batman1788</div>
+      <div id="brandName" class="brand-name">Green Mart</div>
       <div class="brand-sub">Multi‑Shop Menu & Delivery</div>
     </div>
   </div>
@@ -318,7 +318,7 @@
         const rows = await fetch(`${URL.shops}?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
         SHOPS = (rows||[]).map(normalizeShop).filter(s=>s.enabled).sort((a,b)=>a.sort-b.sort || a.name.localeCompare(b.name));
       }catch(e){ SHOPS = []; }
-      if(!SHOPS.length){ SHOPS = [normalizeShop({enabled:'yes',id:'main',name:'Batman1788',tab:TABS.menu})]; }
+      if(!SHOPS.length){ SHOPS = [normalizeShop({enabled:'yes',id:'main',name:'Green Mart',tab:TABS.menu})]; }
       const saved = localStorage.getItem('shop_id');
       const pick = SHOPS.find(s=>s.id===saved) || SHOPS[0];
       await setShop(pick.id);
@@ -665,3 +665,4 @@
   </script>
 </body>
 </html>
+
