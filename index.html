@@ -521,26 +521,34 @@ function persistCart(){
     }
 
     // ======= Cart / checkout =======
-    function addToCart(name, spec, price, img, disp){
+function addToCart(name, spec, price, img, disp){
   // 若当前购物车不属于当前店，先切换到当前店购物车
   if (CART_SHOP !== (CUR?.id || '')) {
     loadCartFor(CUR?.id || '');
   }
+
   const hit = cart.find(x => x.name === name && x.spec === spec);
   if (hit) {
     hit.qty += 1;
   } else {
     cart.push({ name, disp: disp || stripCodeMark(name), spec, price, qty: 1, img });
   }
+
   renderCartBar();
   persistCart();
+
   if (document.getElementById('checkoutBg').classList.contains('active')) {
     renderOrderSummary();
   }
-});
-      renderCartBar(); if (document.getElementById('checkoutBg').classList.contains('active')) renderOrderSummary();
-    }
-    function renderCartBar(){ const cnt = cart.reduce((a,b)=>a+b.qty,0); const total = cart.reduce((a,b)=>a+b.qty*b.price,0); document.getElementById('cartInfo').textContent = `Shopping Cart ${cnt} Item · ${money(total)}`; document.getElementById('checkoutBtn').disabled = (cnt === 0); }
+}
+
+function renderCartBar(){
+  const cnt   = cart.reduce((a,b)=>a+b.qty,0);
+  const total = cart.reduce((a,b)=>a+b.qty*b.price,0);
+  document.getElementById('cartInfo').textContent =
+    `Shopping Cart ${cnt} Item · ${money(total)}`;
+  document.getElementById('checkoutBtn').disabled = (cnt === 0);
+}
     function removeItem(idx){
   if (idx < 0 || idx >= cart.length) return;
   cart.splice(idx, 1);
@@ -710,3 +718,4 @@ window.removeItem = removeItem;
   </script>
 </body>
 </html>
+
