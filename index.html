@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>Green Mart | Multi‑Shop Menu & Delivery</title>
-  <link rel="icon" href="/static/favicon.png" type="image/png" />
+  <title>Batman1788 | Multi‑Shop Menu & Delivery</title>
+  <link rel="icon" href="static/favicon.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- 🔥 SEO Meta -->
@@ -132,7 +132,7 @@
 </head>
 <body>
   <div class="brand">
-    <img id="brandLogo" class="brand-logo" src="/static/batman_logo.png" alt="Shop Logo"/>
+    <img id="brandLogo" class="brand-logo" src="static/batman_logo.png" alt="Shop Logo"/>
     <div class="brand-text">
       <div id="brandName" class="brand-name">Batman1788</div>
       <div class="brand-sub">Multi‑Shop Menu & Delivery</div>
@@ -292,19 +292,20 @@
     let CUR = null;              // 当前 shop 对象
     let PROMO_RULES = [];        // 当前店铺可用的活动
     let MANUAL_PROMO = null;     // 手输 code（叠加判断见 calcPromo）
+    // ✨ Caches & controllers，减少切店卡顿
+    const MENU_CACHE = Object.create(null);
+    const PROMO_CACHE = Object.create(null);
+    let menuController = null;
+    let promoController = null;
+    let IS_SWITCHING = false;     // 手输 code（叠加判断见 calcPromo）
 
     function normalizeShop(r){
       return {
         enabled: isYes(r.enabled),
         id: String(r.id||r.shop||'default').trim(),
-        name: (function(){
-  const n = String(r.name||r.shop_name||r.title||'').trim();
-  if (n) return n;
-  const idf = String(r.id||r.shop||'Shop');
-  return idf.replace(/[_-]+/g,' ').replace(/\b\w/g, s=>s.toUpperCase());
-})(),
+        name: (function(){ const n = String(r.name||r.shop_name||r.title||'').trim(); if(n) return n; const idf = String(r.id||r.shop||'Shop'); const parts = idf.replace(/[_-]+/g,' ').split(' ').filter(Boolean); return parts.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' '); })(),
         tab: String(r.tab||r.menu_tab||TABS.menu).trim(),
-        promo_tab: String(r.promo_tab||'promo').trim(),
+        promo_tab: String(r.promo_tab||r.promo_lab||'promo').trim(),
         pickup_address: String(r.pickup_address||'1 Kingston St, Malvern East VIC 3145, Australia').trim(),
         tg: String(r.tg||r.telegram||'https://t.me/batman1788').trim(),
         sort: Number(r.sort||0) || 0,
@@ -314,72 +315,7 @@
 
     async function loadShops(){
       try{
-        const rows = await fetch(`${URL.shops}?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
-        SHOPS = (rows||[]).map(normalizeShop).filter(s=>s.enabled).sort((a,b)=>a.sort-b.sort || a.name.localeCompare(b.name));
-      }catch(e){ SHOPS = []; }
-      if(!SHOPS.length){ SHOPS = [normalizeShop({enabled:'yes',id:'main',name:'Batman1788',tab:TABS.menu})]; }
-      const saved = localStorage.getItem('shop_id');
-      const pick = SHOPS.find(s=>s.id===saved) || SHOPS[0];
-      setShop(pick.id);
-      renderShopSwitcher();
-    }
-
-    function renderShopSwitcher(){
-      const sel = document.getElementById('shopSelect');
-      sel.innerHTML = SHOPS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
-      sel.value = CUR?.id || SHOPS[0].id;
-      sel.onchange = (e)=> setShop(e.target.value);
-
-      const chips = document.getElementById('shopChips');
-      chips.innerHTML = SHOPS.map(s=>`<button class="chip ${s.id===CUR.id?'active':''}" onclick="setShop('${s.id}')" aria-pressed="${s.id===CUR.id}" title="${s.name}"><img class="shop-chip-logo" src="${s.logo || '/static/batman_logo.png'}" alt="${s.name} logo"/><span class="shop-chip-name">${s.name}</span></button>`).join('');
-
-      // meta line
-      document.getElementById('shopPickup').textContent = `Pickup: ${CUR.pickup_address || '-'}`;
-      const tgA = CUR.tg ? `<a href="${CUR.tg}" target="_blank" rel="noopener">Telegram</a>` : '';
-      document.getElementById('shopTelegram').innerHTML = tgA;
-      document.getElementById('custShop').value = `${CUR.name}`;
-
-      // === brand header ===
-      const logoEl = document.getElementById('brandLogo');
-      const nameEl = document.getElementById('brandName');
-      if (logoEl) { logoEl.src = CUR.logo || '/static/batman_logo.png'; }
-      if (nameEl) { nameEl.textContent = CUR.name || 'Shop'; }
-    }
-
-    async function setShop(id){
-      const s = SHOPS.find(x=>x.id===id) || SHOPS[0];
-      CUR = s; localStorage.setItem('shop_id', s.id);
-      // 更新 pickup 地址默认
-      PICKUP_ADDRESS = CUR.pickup_address || PICKUP_ADDRESS;
-      // 重新加载促销与菜单
-      await Promise.all([loadPromos(), loadMenu()]);
-      renderShopSwitcher();
-    }
-
-    // ======= PROMO rules（分店加载） =======
-    function normalizePromoRow(r){
-      return {
-        enabled: isYes(r.enabled),
-        type: String(r.type||'').trim().toLowerCase(),   // freeship | minus | percent | info | gift | bundle
-        value: Number(r.value || 0) || 0,
-        min: Number(r.min_subtotal || r.min || 0) || 0,
-        code: String(r.code||'').trim().toUpperCase(),
-        auto: isYes(r.auto),
-        stack: isYes(r.stack) || String(r.stack||'').trim().toLowerCase() !== 'no',
-        desc: String(r.desc||r.note||'').trim(),
-        start: String(r.start||'').trim(),
-        end:   String(r.end||'').trim()
-      };
-    }
-
-    async function loadPromos(){
-      try{
-        const url = URL.promo(CUR?.promo_tab);
-        const rows = await fetch(`${url}?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
-        PROMO_RULES = (rows||[]).map(normalizePromoRow).filter(p=>p.enabled && isActiveNow(p));
-      }catch(e){ PROMO_RULES = []; }
-      MANUAL_PROMO = null; // 切店后清空手输
-    }
+        const rows = await fetch(`${URL.shops
 
     // ======= Notice marquee =======
     (function(){
@@ -418,9 +354,34 @@
     let PICKUP_ADDRESS = "1 Kingston St, Malvern East VIC 3145, Australia"; // 会被店铺覆盖
 
     function normalizeMenuRow(r){
-      const priceQ = normPrice(r.q||r.Q||r.price_q);
-      const priceH = normPrice(r.h||r.H||r.price_h);
-      const priceOZ = normPrice(r.oz||r.OZ||r.price_oz);
+      // legacy prices first
+      let priceQ = normPrice(r.priceQ||r.price_q||r.q||r.Q||r['Q_price']||r['price-q']);
+      let priceH = normPrice(r.priceH||r.price_h||r.h||r.H||r['H_price']||r['price-h']);
+      let priceOZ = normPrice(r.priceOZ||r.price_oz||r.oz||r.OZ||r.O||r['O_price']||r['price-oz']);
+
+      // support spec1/price1, spec2/price2, spec3/price3
+      const spec1 = String(r.spec1||r.spec_1||r.option1||r.opt1||'').trim();
+      const spec2 = String(r.spec2||r.spec_2||r.option2||r.opt2||'').trim();
+      const spec3 = String(r.spec3||r.spec_3||r.option3||r.opt3||'').trim();
+      const p1 = normPrice(r.price1||r.price_1||r.p1);
+      const p2 = normPrice(r.price2||r.price_2||r.p2);
+      const p3 = normPrice(r.price3||r.price_3||r.p3);
+
+      function tagToKey(tag){
+        const t = String(tag||'').toLowerCase();
+        if(t==='q' || t.indexOf('quarter')>=0) return 'Q';
+        if(t==='h' || t.indexOf('half')>=0)    return 'H';
+        if(t==='oz'|| t.indexOf('ounce')>=0 || t==='o') return 'OZ';
+        return '';
+      }
+      const pairs = [ [tagToKey(spec1), p1], [tagToKey(spec2), p2], [tagToKey(spec3), p3] ];
+      for(const kv of pairs){
+        const k = kv[0]; const v = kv[1];
+        if(k==='Q' && (!priceQ || priceQ<=0)) priceQ = v;
+        if(k==='H' && (!priceH || priceH<=0)) priceH = v;
+        if(k==='OZ'&& (!priceOZ|| priceOZ<=0)) priceOZ = v;
+      }
+
       return {
         name: String(r.name||'').trim(),
         badge: String(r.badge||'').trim(),
@@ -429,9 +390,10 @@
         desc: String(r.desc||'').trim(),
         img: String(r.img||'').trim(),
         thccbd: String(r.thccbd||'').trim(),
-        shop: String(r.shop||r.shop_id||'').trim(),  // ✨ 新列（可选）：所属店
-        priceQ, priceH, priceOZ
+        shop: String(r.shop||r.shop_id||'').trim(),
+        priceQ: priceQ, priceH: priceH, priceOZ: priceOZ
       };
+    };
     }
 
     async function loadMenu(){
