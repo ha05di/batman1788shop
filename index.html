@@ -527,10 +527,16 @@ function persistCart(){
     loadCartFor(CUR?.id || '');
   }
   const hit = cart.find(x => x.name === name && x.spec === spec);
-  if (hit) hit.qty += 1; else cart.push({ name, disp: disp || stripCodeMark(name), spec, price, qty: 1, img });
+  if (hit) {
+    hit.qty += 1;
+  } else {
+    cart.push({ name, disp: disp || stripCodeMark(name), spec, price, qty: 1, img });
+  }
   renderCartBar();
   persistCart();
-  if (document.getElementById('checkoutBg').classList.contains('active')) renderOrderSummary();
+  if (document.getElementById('checkoutBg').classList.contains('active')) {
+    renderOrderSummary();
+  }
 });
       renderCartBar(); if (document.getElementById('checkoutBg').classList.contains('active')) renderOrderSummary();
     }
