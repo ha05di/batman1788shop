@@ -292,12 +292,6 @@
     let CUR = null;              // 当前 shop 对象
     let PROMO_RULES = [];        // 当前店铺可用的活动
     let MANUAL_PROMO = null;     // 手输 code（叠加判断见 calcPromo）
-    // ✨ Caches & controllers，减少切店卡顿
-    const MENU_CACHE = Object.create(null);
-    const PROMO_CACHE = Object.create(null);
-    let menuController = null;
-    let promoController = null;
-    let IS_SWITCHING = false;     // 手输 code（叠加判断见 calcPromo）
 
     function normalizeShop(r){
       return {
@@ -348,19 +342,13 @@
     }
 
     async function setShop(id){
-      if (IS_SWITCHING) return;
-      if (CUR && CUR.id === id) return;
-      IS_SWITCHING = true;
-      try{
-        const s = SHOPS.find(x=>x.id===id) || SHOPS[0];
-        CUR = s; localStorage.setItem('shop_id', s.id);
-        PICKUP_ADDRESS = CUR.pickup_address || PICKUP_ADDRESS;
-        renderShopSwitcher();
-        await Promise.all([loadPromos(), loadMenu()]);
-      } finally {
-        IS_SWITCHING = false;
-        renderShopSwitcher();
-      }
+      const s = SHOPS.find(x=>x.id===id) || SHOPS[0];
+      CUR = s; localStorage.setItem('shop_id', s.id);
+      // 更新 pickup 地址默认
+      PICKUP_ADDRESS = CUR.pickup_address || PICKUP_ADDRESS;
+      // 重新加载促销与菜单
+      await Promise.all([loadPromos(), loadMenu()]);
+      renderShopSwitcher();
     }
 
     // ======= PROMO rules（分店加载） =======
@@ -380,18 +368,9 @@
     }
 
     async function loadPromos(){
-      const key = CUR?.id || 'main';
-      if (PROMO_CACHE[key]){ PROMO_RULES = PROMO_CACHE[key]; MANUAL_PROMO = null; return; }
-      try{ promoController && promoController.abort(); }catch(e){}
-      promoController = new AbortController();
       try{
         const url = URL.promo(CUR?.promo_tab);
-        const rows = await fetch(`${url}?t=${Date.now()}`, {cache:'no-store', signal: promoController.signal}).then(r=>r.json());
-        PROMO_RULES = (rows||[]).map(normalizePromoRow).filter(p=>p.enabled && isActiveNow(p));
-        PROMO_CACHE[key] = PROMO_RULES;
-      }catch(e){ PROMO_RULES = []; }
-      MANUAL_PROMO = null;
-    }?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
+        const rows = await fetch(`${url}?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
         PROMO_RULES = (rows||[]).map(normalizePromoRow).filter(p=>p.enabled && isActiveNow(p));
       }catch(e){ PROMO_RULES = []; }
       MANUAL_PROMO = null; // 切店后清空手输
