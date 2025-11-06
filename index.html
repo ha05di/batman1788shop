@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>Batman1788 | Multi‑Shop Menu & Delivery</title>
+  <title>Green Mart | Multi‑Shop Menu & Delivery</title>
   <link rel="icon" href="/static/favicon.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -118,10 +118,22 @@
     @media (max-width:700px){ .phone-addr{ grid-template-columns:.7fr 1.6fr } }
     @media (max-width:480px){ .phone-addr{ grid-template-columns:.6fr 1.8fr } }
     .pac-container{ z-index:100000 !important; }
+      /* === Brand header === */
+    .brand{display:flex;align-items:center;gap:12px;justify-content:center;padding:16px 14px 0}
+    .brand-logo{width:44px;height:44px;border-radius:12px;object-fit:cover;border:1px solid #2a2d36;background:#0f1014}
+    .brand-text{display:flex;flex-direction:column;align-items:flex-start}
+    .brand-name{font-size:20px;font-weight:800;color:var(--bat-fg);line-height:1}
+    .brand-sub{font-size:12px;color:#bfbfbf;margin-top:3px}
   </style>
 </head>
 <body>
-  <h1 class="header">Batman1788 — Multi‑Shop Menu & Delivery</h1>
+  <div class="brand">
+    <img id="brandLogo" class="brand-logo" src="/static/batman_logo.png" alt="Shop Logo"/>
+    <div class="brand-text">
+      <div id="brandName" class="brand-name">Batman1788</div>
+      <div class="brand-sub">Multi‑Shop Menu & Delivery</div>
+    </div>
+  </div>
   <div class="open-hours">OPEN Daily 10:00AM - 10:00PM</div>
 
   <!-- Shop switcher -->
@@ -286,7 +298,8 @@
         promo_tab: String(r.promo_tab||'promo').trim(),
         pickup_address: String(r.pickup_address||'1 Kingston St, Malvern East VIC 3145, Australia').trim(),
         tg: String(r.tg||r.telegram||'https://t.me/batman1788').trim(),
-        sort: Number(r.sort||0) || 0
+        sort: Number(r.sort||0) || 0,
+        logo: String(r.logo||r.logo_url||'').trim()
       };
     }
 
@@ -316,6 +329,12 @@
       const tgA = CUR.tg ? `<a href="${CUR.tg}" target="_blank" rel="noopener">Telegram</a>` : '';
       document.getElementById('shopTelegram').innerHTML = tgA;
       document.getElementById('custShop').value = `${CUR.name}`;
+
+      // === brand header ===
+      const logoEl = document.getElementById('brandLogo');
+      const nameEl = document.getElementById('brandName');
+      if (logoEl) { logoEl.src = CUR.logo || '/static/batman_logo.png'; }
+      if (nameEl) { nameEl.textContent = CUR.name || 'Shop'; }
     }
 
     async function setShop(id){
