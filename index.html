@@ -2,29 +2,29 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>Green Mart | Multi‑Shop Menu & Delivery</title>
+  <title>Batman1788 | Multi‑Shop Menu & Delivery</title>
   <link rel="icon" href="static/favicon.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- 🔥 SEO Meta -->
-  <meta name="description" content="Green Mart - Melbourne Cannabis Menu. Same-day weed delivery, premium strains, vapes, and more. Order via Telegram." />
-  <meta name="keywords" content="Green Mart, Melbourne cannabis, weed delivery, marijuana menu, vapes, premium strains, Melbourne weed, Malvern weed" />
-  <meta name="author" content="Green Mart" />
+  <meta name="description" content="Batman1788 - Melbourne Cannabis Menu. Same-day weed delivery, premium strains, vapes, and more. Order via Telegram." />
+  <meta name="keywords" content="Batman1788, Melbourne cannabis, weed delivery, marijuana menu, vapes, premium strains, Melbourne weed, Malvern weed" />
+  <meta name="author" content="Batman1788" />
 
   <!-- 🔥 Open Graph (for link previews) -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Green Mart | Multi‑Shop Menu & Delivery" />
+  <meta property="og:title" content="Batman1788 | Multi‑Shop Menu & Delivery" />
   <meta property="og:description" content="View our premium cannabis menu. Same-day delivery in Melbourne. Order via Telegram easily." />
   <meta property="og:url" content="https://www.batman1788.shop/" />
   <meta property="og:image" content="https://www.batman1788.shop/static/batman_logo.png" />
   <meta property="og:image:width" content="300" />
   <meta property="og:image:height" content="300" />
-  <meta property="og:site_name" content="Green Mart" />
+  <meta property="og:site_name" content="Batman1788" />
 
   <!-- 🔥 Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Green Mart | Multi‑Shop Menu & Delivery" />
-  <meta name="twitter:description" content="Green Mart - Melbourne cannabis delivery menu. Same-day service, premium strains, vapes & more." />
+  <meta name="twitter:title" content="Batman1788 | Multi‑Shop Menu & Delivery" />
+  <meta name="twitter:description" content="Batman1788 - Melbourne cannabis delivery menu. Same-day service, premium strains, vapes & more." />
   <meta name="twitter:image" content="https://www.batman1788.shop/static/batman_logo.png" />
 
   <!-- Optional: Google Analytics -->
@@ -134,7 +134,7 @@
   <div class="brand">
     <img id="brandLogo" class="brand-logo" src="static/batman_logo.png" alt="Shop Logo"/>
     <div class="brand-text">
-      <div id="brandName" class="brand-name">Green Mart</div>
+      <div id="brandName" class="brand-name">Batman1788</div>
       <div class="brand-sub">Multi‑Shop Menu & Delivery</div>
     </div>
   </div>
@@ -158,9 +158,11 @@
     </div>
   </div>
 
-  <!-- Bind Telegram -->
-  <div style="max-width:530px;margin:10px auto 0; padding:0 12px; text-align:center;">
+  <!-- Bind Telegram / Telegram Login -->
+  <div style="max-width:530px;margin:10px auto 0; padding:0 12px; text-align:center; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
     <button type="button" class="menu-spec" onclick="bindTelegram()">One‑click binding Telegram</button>
+    <span style="opacity:.7;align-self:center">or</span>
+    <span id="tgLoginMount" style="display:inline-flex;align-items:center;min-height:38px"></span>
   </div>
 
   <div class="menu-wrap" id="menu"></div>
@@ -235,7 +237,7 @@
   </div>
 
   <!-- Floating contact -->
-  <a href="https://t.me/" target="_blank" class="contact-fab" title="Customer Service" aria-label="Customer Service on Telegram">
+  <a href="https://t.me/batman1788" target="_blank" class="contact-fab" title="Customer Service" aria-label="Customer Service on Telegram">
     Customer
   </a>
 
@@ -256,6 +258,7 @@
     // ======= Config =======
     const API_BASE = ""; // same origin
     const SHEET_ID = "1hUlRnvEy-k2Arz8SVKpRsAaBEFTyS6RDJBDfwDmM-Hs"; // <- 你的 Google Sheet
+    const TG_LOGIN_BOT = "your_new_bot_username"; // ✨ Telegram Login 小组件使用的 Bot 用户名（不带@）
     const TABS = {
       menu:   'batmenu',   // 默认菜单表
       notice: 'notice',
@@ -326,7 +329,7 @@ function persistCart(){
         tab: String(r.tab||r.menu_tab||TABS.menu).trim(),
         promo_tab: String(r.promo_tab||r.promo_lab||'promo').trim(),
         pickup_address: String(r.pickup_address||'1 Kingston St, Malvern East VIC 3145, Australia').trim(),
-        tg: String(r.tg||r.telegram||'https://t.me/').trim(),
+        tg: String(r.tg||r.telegram||'https://t.me/batman1788').trim(),
         sort: Number(r.sort||0) || 0,
         logo: String(r.logo||r.logo_url||'').trim()
       };
@@ -337,7 +340,7 @@ function persistCart(){
         const rows = await fetch(`${URL.shops}?t=${Date.now()}`, {cache:'no-store'}).then(r=>r.json());
         SHOPS = (rows||[]).map(normalizeShop).filter(s=>s.enabled).sort((a,b)=>a.sort-b.sort || a.name.localeCompare(b.name));
       }catch(e){ SHOPS = []; }
-      if(!SHOPS.length){ SHOPS = [normalizeShop({enabled:'yes',id:'main',name:'Green Mart',tab:TABS.menu})]; }
+      if(!SHOPS.length){ SHOPS = [normalizeShop({enabled:'yes',id:'main',name:'Batman1788',tab:TABS.menu})]; }
       const saved = localStorage.getItem('shop_id');
       const pick = SHOPS.find(s=>s.id===saved) || SHOPS[0];
       await setShop(pick.id);
@@ -521,34 +524,26 @@ function persistCart(){
     }
 
     // ======= Cart / checkout =======
-function addToCart(name, spec, price, img, disp){
+    function addToCart(name, spec, price, img, disp){
   // 若当前购物车不属于当前店，先切换到当前店购物车
   if (CART_SHOP !== (CUR?.id || '')) {
     loadCartFor(CUR?.id || '');
   }
-
   const hit = cart.find(x => x.name === name && x.spec === spec);
   if (hit) {
     hit.qty += 1;
   } else {
     cart.push({ name, disp: disp || stripCodeMark(name), spec, price, qty: 1, img });
   }
-
   renderCartBar();
   persistCart();
-
   if (document.getElementById('checkoutBg').classList.contains('active')) {
     renderOrderSummary();
   }
-}
-
-function renderCartBar(){
-  const cnt   = cart.reduce((a,b)=>a+b.qty,0);
-  const total = cart.reduce((a,b)=>a+b.qty*b.price,0);
-  document.getElementById('cartInfo').textContent =
-    `Shopping Cart ${cnt} Item · ${money(total)}`;
-  document.getElementById('checkoutBtn').disabled = (cnt === 0);
-}
+});
+      renderCartBar(); if (document.getElementById('checkoutBg').classList.contains('active')) renderOrderSummary();
+    }
+    function renderCartBar(){ const cnt = cart.reduce((a,b)=>a+b.qty,0); const total = cart.reduce((a,b)=>a+b.qty*b.price,0); document.getElementById('cartInfo').textContent = `Shopping Cart ${cnt} Item · ${money(total)}`; document.getElementById('checkoutBtn').disabled = (cnt === 0); }
     function removeItem(idx){
   if (idx < 0 || idx >= cart.length) return;
   cart.splice(idx, 1);
@@ -705,18 +700,73 @@ window.removeItem = removeItem;
         // 轮询确认
         const t0 = Date.now();
         const timer = setInterval(async()=>{
-          const rs = await fetch(`/bind/status?code=${encodeURIComponent(j.code)}`); const js = await rs.json();
-          if(js.status==='ok'){ clearInterval(timer); localStorage.setItem('tg_chat_id', js.chat_id); alert('Bind success'); }
-          else if(Date.now()-t0 > 120000){ clearInterval(timer); alert('Bind timeout'); }
+          try{
+            const rs = await fetch(`/bind/status?code=${encodeURIComponent(j.code)}`); const js = await rs.json();
+            if(js.status==='ok'){ clearInterval(timer); localStorage.setItem('tg_chat_id', js.chat_id); alert('Bind success'); }
+            else if(Date.now()-t0 > 120000){ clearInterval(timer); alert('Bind timeout'); }
+          }catch(e){ /* ignore one poll error */ }
         }, 2000);
       }catch(e){ alert('Bind error'); }
     }
 
+    // ======= Telegram Login Widget 集成 =======
+    function mountTGLogin(){
+      const host = document.getElementById('tgLoginMount');
+      if(!host) return;
+      host.innerHTML = '';
+      if(!TG_LOGIN_BOT || TG_LOGIN_BOT === 'your_new_bot_username'){
+        const tip = document.createElement('span');
+        tip.style.opacity = 0.7; tip.textContent = 'Set TG_LOGIN_BOT to enable Telegram Login';
+        host.appendChild(tip); return;
+      }
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://telegram.org/js/telegram-widget.js?22';
+      s.setAttribute('data-telegram-login', TG_LOGIN_BOT);
+      s.setAttribute('data-size', 'medium');
+      s.setAttribute('data-userpic', 'false');
+      s.setAttribute('data-request-access', 'write');
+      s.setAttribute('data-onauth', 'onTGAuth(user)');
+      host.appendChild(s);
+    }
+
+    async function onTGAuth(user){
+      // user: {id, first_name, last_name, username, photo_url, auth_date, hash}
+      try{
+        const res = await fetch(`${API_BASE}/tg/login/verify`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ user, shop_id: CUR?.id || 'main' })
+        });
+        if(res.ok){
+          const data = await res.json();
+          // 后端若校验成功，建议返回 {ok:true, tg_user_id, chat_id, need_start:false}
+          if(data.tg_user_id) localStorage.setItem('tg_user_id', String(data.tg_user_id));
+          if(data.chat_id){
+            localStorage.setItem('tg_chat_id', String(data.chat_id));
+            alert('Telegram Login success');
+          } else if(data.need_start && data.deeplink){
+            // 还没授权接收消息，引导用户点击 Start
+            window.open(data.deeplink, '_blank');
+            alert('Please click Start in Telegram to enable messages');
+          } else {
+            alert('Login verified');
+          }
+        } else {
+          const err = await res.text();
+          alert('Login verify failed: ' + err);
+        }
+      }catch(e){
+        // 后端尚未实现 /tg/login/verify 时的优雅降级
+        alert('Login verify error. You can still use one-click binding.');
+      }
+    }
+
     // ======= Boot =======
+    mountTGLogin();
+    loadShops();
+    onShipChange();
     loadShops();
     onShipChange();
   </script>
 </body>
 </html>
-
-
