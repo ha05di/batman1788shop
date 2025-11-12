@@ -128,7 +128,12 @@
     .shop-chip-name{font-size:11px;color:#cfcfcf;max-width:78px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .shopbar .chip.active .shop-chip-name{color:#111}
   .shopbar .sel{display:none !important}
-  </style>
+  
+/* === ChatGPT patch: remove big top shop logo === */
+#shopLogo, .shop-logo, .shop-logo-wrap, .logo-box, .brand-logo { display: none !important; }
+/* tighten header spacing after removing logo */
+.header, .shop-header, .title-wrap, .brand { padding-top: 8px !important; margin-top: 0 !important; gap: 6px !important; }
+</style>
 </head>
 <body>
   <div class="brand">
